@@ -1,0 +1,13 @@
+[package]
+name = "timui"
+version = "0.1.0"
+authors = ["Romain TRUCHI <romain.truchi.06@gmail.com>"]
+edition = "2018"
+
+[lib]
+name = "lib"
+path = "src/lib/mod.rs"
+
+[dependencies]
+termion = "1.5.5"
+petgraph = "0.5.1"
