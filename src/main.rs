@@ -1,51 +1,89 @@
+use lib::component::AnyComponent;
 use lib::component::Component;
-use lib::components::char::Char;
-// use lib::style::Style;
+use lib::render::render;
+use lib::style::Style;
 use lib::ui::UI;
-use lib::{children, props};
+use lib::{children, component, props, ui};
 
-struct RootProps(u8);
-enum RootChildren {
-    A(A),
-    B(B),
-}
-struct Root {
-    props: RootProps,
-    children: RootChildren,
-}
+// impl Component for Root {
+// fn ui(&self) -> UI {
+// 'c'.into()
 
-struct AProps([char; 4]);
-struct AChildren([Char; 4]);
-struct A {
-    props: AProps,
-    children: AChildren,
-}
+// (Box::new(Char { c: 'F' }) as Box<dyn Component>).into()
 
-props!(A, AProps);
-children!(A, AChildren);
+// vec![
+// Box::new(Char { c: 'F' }) as Box<dyn Component>,
+// Box::new(Char { c: 'U' }) as Box<dyn Component>,
+// Box::new(Char { c: 'C' }) as Box<dyn Component>,
+// Box::new(Char { c: 'K' }) as Box<dyn Component>,
+// ]
+// .into()
 
-impl Component for A {
-    fn ui(&self, _props: &Self::Props, _children: &Self::Children) -> UI {
-        UI::from('a')
-    }
-}
+// <UI as From<ComponentObject>>::from(Box::new(Char { c: 'F' }))
 
-struct BProps(u8);
-struct BChildren(u8);
-struct B {
-    props: BProps,
-    children: BChildren,
-}
+// <UI as From<ComponentObjectList>>::from(vec![
+// Box::new(Char { c: 'F' }),
+// Box::new(Char { c: 'U' }),
+// Box::new(Char { c: 'C' }),
+// Box::new(Char { c: 'K' }),
+// ])
+// }
+// }
 
-props!(B, BProps);
-children!(B, BChildren);
-impl Component for B {
-    fn ui(&self, _props: &Self::Props, _children: &Self::Children) -> UI {
-        UI::from(String::from("b"))
-    }
-}
+component!(
+    pub Root ((), ()),
+    fn ui |_, _| ui!(Comp, ['F', 'U', 'C', 'K'])
+);
+
+component!(
+    pub Comp ([char; 4], ()),
+    // fn ui |chars, _| ui!(
+        // chars.into_iter().map(|c|
+            // ui!(Box, *c)
+        // ).collect::<Vec<UI>>()
+    // )
+    fn ui |chars, _| chars.into_iter().map(|c|
+        ui!(Char, *c)
+    ).collect::<Vec<UI>>().into(),
+    // fn ui |chars, _| chars.into_iter().map(|c|
+        // Box::new(Char { props: *c, children: () }) as Box<dyn AnyComponent>
+    // ).collect::<Vec<_>>().into(),
+);
+
+component!(
+    pub Char (char, ()),
+    fn ui |c, _| c.clone().into(),
+);
 
 fn main() {
+    println!("done");
+    let ui: UI = ui!(Root, ());
+
+    fn print(ui: UI) {
+        match ui {
+            UI::None => {
+                println!("NONE");
+            }
+            UI::Char(c) => {
+                println!("Char {}", c);
+            }
+            UI::Component(component) => {
+                println!("Component");
+                print(component.ui());
+                println!("/Component");
+            }
+            UI::Fragment(vec) => {
+                println!("Fragment");
+                for component in vec {
+                    print(component.ui());
+                }
+                println!("/Fragment");
+            }
+        }
+    }
+
+    print(ui);
+
     // let v: Components = &[
     // Box::new(A {
     // props: AProps(12),

@@ -1,6 +1,8 @@
 #![macro_use]
 
 pub mod component;
-pub mod components;
+mod components;
+pub use components::*;
+pub mod render;
 pub mod style;
 pub mod ui;
