@@ -1,76 +1,40 @@
-use super::component::AnyComponent;
-use super::component::Component;
-use super::components::Char;
+use super::element::ElementObject;
+use super::layout::Layout;
+use super::style::Style;
+use super::view::View;
 
-pub enum UI {
-    None,
+#[derive(Debug)]
+pub enum Content {
+    Empty,
     Char(char),
-    Component(Box<dyn AnyComponent>),
-    Fragment(Vec<Box<dyn AnyComponent>>),
+    List(Vec<UI>),
 }
 
-impl Default for UI {
-    fn default() -> Self {
-        UI::None
-    }
+#[derive(Debug)]
+pub struct UI {
+    layout: Layout,
+    style: Style,
+    content: Content,
 }
 
-impl<C> From<C> for UI
-where
-    C: Component + 'static, // NOTE ?
-{
-    fn from(component: C) -> Self {
-        Self::Component(component.into())
-    }
-}
-
-impl From<Vec<UI>> for UI {
-    fn from(v: Vec<UI>) -> Self {
-        Self::Fragment(
-            v.into_iter()
-                .flat_map(|ui| {
-                    match ui {
-                        UI::None => vec![],
-                        UI::Char(c) => vec![Char {
-                            props: c,
-                            children: (),
-                        }
-                        .into()],
-                        UI::Component(component) => vec![component],
-                        UI::Fragment(vec) => vec,
-                    }
-                    .into_iter()
-                })
-                .collect(),
-        )
-    }
-}
-
-impl From<char> for UI {
-    fn from(c: char) -> Self {
-        Self::Char(c)
-    }
-}
-
-impl From<()> for UI {
-    fn from(_: ()) -> Self {
-        Self::None
-    }
-}
-
-#[macro_export]
-macro_rules! ui {
-    ($props:expr $(,)?) => {
-        $props
-    };
-    ($Component:ident, $props:expr, $children:expr $(,)?) => {
-        $Component {
-            props: $props,
-            children: $children,
+impl From<View> for Content {
+    fn from(view: View) -> Self {
+        match view {
+            View::Empty => Self::Empty,
+            View::Char(c) => Self::Char(c),
+            View::List(list) => {
+                Self::List(list.into_iter().map(|element| element.into()).collect())
+            }
         }
-        .into()
-    };
-    ($Component:ident, $props:expr $(,)?) => {
-        $crate::ui!($Component, $props, ())
-    };
+    }
+}
+
+impl From<ElementObject> for UI {
+    fn from(element: ElementObject) -> Self {
+        Self {
+            layout: element.layout(),
+            style: element.style(),
+            content: element.view().into(),
+        }
+    }
 }

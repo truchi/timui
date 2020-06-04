@@ -1,6 +1,11 @@
-use super::super::component;
+use super::super::component::Component;
+use super::super::view::View;
 
-component!(
-    pub Char(char, ()),
-    fn ui |c, _| c.clone().into()
-);
+impl Component for char {
+    type Props = char;
+    type Children = ();
+
+    fn view(&self, props: char, _: ()) -> View {
+        props.into()
+    }
+}

@@ -1,2 +1,1 @@
-mod character;
-pub use character::*;
+pub mod character;

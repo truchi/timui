@@ -1,3 +1,4 @@
+#[derive(Debug)]
 pub enum Color {
     AnsiValue,
     Black,
@@ -19,6 +20,7 @@ pub enum Color {
     Yellow,
 }
 
+#[derive(Debug)]
 pub struct Style {
     foreground: Option<Color>,
     background: Option<Color>,

@@ -1,8 +1,10 @@
-#![macro_use]
+mod macros;
 
 pub mod component;
-mod components;
-pub use components::*;
+pub mod components;
+pub mod element;
+pub mod layout;
 pub mod render;
 pub mod style;
 pub mod ui;
+pub mod view;
