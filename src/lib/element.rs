@@ -57,3 +57,12 @@ where
         self.component.view(self.props, self.children)
     }
 }
+
+impl<C> From<Element<C>> for ElementObject
+where
+    C: Component + Debug + 'static,
+{
+    fn from(element: Element<C>) -> Self {
+        Box::new(element)
+    }
+}
