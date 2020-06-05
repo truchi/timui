@@ -20,8 +20,8 @@ where
     C: Component,
 {
     component: C,
-    props: <C as Component>::Props,
-    children: <C as Component>::Children,
+    pub props: <C as Component>::Props,
+    pub children: <C as Component>::Children,
 }
 
 impl<C> Element<C>
@@ -37,6 +37,28 @@ where
             component,
             props,
             children,
+        }
+    }
+
+    pub fn over_props<F>(self, f: F) -> Self
+    where
+        F: FnOnce(<C as Component>::Props) -> <C as Component>::Props,
+    {
+        Self {
+            component: self.component,
+            props: f(self.props),
+            children: self.children,
+        }
+    }
+
+    pub fn over_children<F>(self, f: F) -> Self
+    where
+        F: FnOnce(<C as Component>::Children) -> <C as Component>::Children,
+    {
+        Self {
+            component: self.component,
+            props: self.props,
+            children: f(self.children),
         }
     }
 }
