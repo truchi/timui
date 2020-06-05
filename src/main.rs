@@ -3,6 +3,7 @@ use lib::element::ElementObject;
 use lib::render::render;
 use lib::view::View;
 use lib::{component, element, view};
+use termion::terminal_size;
 
 #[derive(Default, Debug)]
 pub struct Root;
@@ -34,5 +35,6 @@ component!(
 
 fn main() {
     render(element![Root, ()]);
-    println!("DONE!");
+    println!("{:?}", terminal_size().unwrap());
+    println!("{}", '🎁');
 }
