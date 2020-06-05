@@ -1,40 +1,41 @@
 use lib::element::Element;
-use lib::element::ElementObject;
+use lib::layout::Layout;
 use lib::render::render;
-use lib::view::View;
+use lib::style::Color;
+use lib::style::Style;
 use lib::{component, element, view};
 use termion::terminal_size;
 
 #[derive(Default, Debug)]
 pub struct Root;
 component!(
-    Root, (), (),
+    Root, (u16, u16); (),
     fn view |_, _| view![
-        (Word, vec!['F', 'U', 'C', 'K'], vec![Element::new(Footer::default(), 'a', ())])
-        (char, 'C',)
+        (Word, vec!['F', 'U', 'C', 'K'];
+            vec![element!(Footer, 'a'; ())]
+        )
+        (char, 'C')
     ],
 );
 
 #[derive(Default, Debug)]
 pub struct Word;
 component!(
-    Word, Vec<char>, Vec<Element<Footer>>,
-    fn view |chars, footers| View::List(
-        chars.iter().map(|c| element!(char, *c))
+    Word, Vec<char>; Vec<Element<Footer>>,
+    fn view |chars, footers|
+        chars.iter().map(|c| element!(box char, *c))
             .chain(footers.into_iter().map(|footer| footer.over_props(|_| 'b').into()))
-            .collect::<Vec<ElementObject>>()
-    )
+            .collect::<Vec<_>>().into(),
 );
 
 #[derive(Default, Debug)]
 pub struct Footer;
 component!(
-    Footer, char, (),
+    Footer, char; (),
     fn view |c, _| c.into(),
 );
 
 fn main() {
-    render(element![Root, ()]);
-    println!("{:?}", terminal_size().unwrap());
+    render(element![box Root, terminal_size().unwrap()]);
     println!("{}", '🎁');
 }

@@ -7,11 +7,11 @@ macro_rules! component {
     // Implements layout for $Component with closure
     // Default style & view
     (
-        $Component:ty, $Props:ty, $Children:ty,
+        $Component:ty, $Props:ty; $Children:ty,
         fn layout |$layout_props:tt, $layout_children:tt| $layout_body:expr $(,)?
     ) => {
         $crate::component!(
-            impl $Component, $Props, $Children,
+            impl $Component, $Props; $Children,
             fn layout |$layout_props, $layout_children| $layout_body,
         );
     };
@@ -19,11 +19,11 @@ macro_rules! component {
     // Implements style for $Component with closure
     // Default layout & view
     (
-        $Component:ty, $Props:ty, $Children:ty,
+        $Component:ty, $Props:ty; $Children:ty,
         fn style |$style_props:tt, $style_children:tt| $style_body:expr $(,)?
     ) => {
         $crate::component!(
-            impl $Component, $Props, $Children,
+            impl $Component, $Props; $Children,
             fn style |$style_props, $style_children| $style_body,
         );
     };
@@ -31,11 +31,11 @@ macro_rules! component {
     // Implements view for $Component with closure
     // Default layout & style
     (
-        $Component:ty, $Props:ty, $Children:ty,
+        $Component:ty, $Props:ty; $Children:ty,
         fn view |$view_props:tt, $view_children:tt| $view_body:expr $(,)?
     ) => {
         $crate::component!(
-            impl $Component, $Props, $Children,
+            impl $Component, $Props; $Children,
             fn view |$view_props, $view_children| $view_body,
         );
     };
@@ -47,23 +47,23 @@ macro_rules! component {
     // Implements style & view for $Component with closures
     // Default layout
     (
-        $Component:ty, $Props:ty, $Children:ty,
+        $Component:ty, $Props:ty; $Children:ty,
         fn view |$view_props:tt, $view_children:tt| $view_body:expr,
         fn style |$style_props:tt, $style_children:tt| $style_body:expr $(,)?
     ) => {
         $crate::component!(
-            impl $Component, $Props, $Children,
+            impl $Component, $Props; $Children,
             fn style |$style_props, $style_children| $style_body,
             fn view |$view_props, $view_children| $view_body,
         );
     };
     (
-        $Component:ty, $Props:ty, $Children:ty,
+        $Component:ty, $Props:ty; $Children:ty,
         fn style |$style_props:tt, $style_children:tt| $style_body:expr,
         fn view |$view_props:tt, $view_children:tt| $view_body:expr $(,)?
     ) => {
         $crate::component!(
-            impl $Component, $Props, $Children,
+            impl $Component, $Props; $Children,
             fn style |$style_props, $style_children| $style_body,
             fn view |$view_props, $view_children| $view_body,
         );
@@ -72,23 +72,23 @@ macro_rules! component {
     // Implements layout & view for $Component with closures
     // Default style
     (
-        $Component:ty, $Props:ty, $Children:ty,
+        $Component:ty, $Props:ty; $Children:ty,
         fn layout |$layout_props:tt, $layout_children:tt| $layout_body:expr,
         fn view |$view_props:tt, $view_children:tt| $view_body:expr $(,)?
     ) => {
         $crate::component!(
-            impl $Component, $Props, $Children,
+            impl $Component, $Props; $Children,
             fn layout |$layout_props, $layout_children| $layout_body,
             fn view |$view_props, $view_children| $view_body,
         );
     };
     (
-        $Component:ty, $Props:ty, $Children:ty,
+        $Component:ty, $Props:ty; $Children:ty,
         fn view |$view_props:tt, $view_children:tt| $view_body:expr,
         fn layout |$layout_props:tt, $layout_children:tt| $layout_body:expr $(,)?
     ) => {
         $crate::component!(
-            impl $Component, $Props, $Children,
+            impl $Component, $Props; $Children,
             fn layout |$layout_props, $layout_children| $layout_body,
             fn view |$view_props, $view_children| $view_body,
         );
@@ -97,23 +97,23 @@ macro_rules! component {
     // Implements layout & style for $Component with closures
     // Default view
     (
-        $Component:ty, $Props:ty, $Children:ty,
+        $Component:ty, $Props:ty; $Children:ty,
         fn style |$style_props:tt, $style_children:tt| $style_body:expr,
         fn layout |$layout_props:tt, $layout_children:tt| $layout_body:expr $(,)?
     ) => {
         $crate::component!(
-            impl $Component, $Props, $Children,
+            impl $Component, $Props; $Children,
             fn layout |$layout_props, $layout_children| $layout_body,
             fn style |$style_props, $style_children| $style_body,
         );
     };
     (
-        $Component:ty, $Props:ty, $Children:ty,
+        $Component:ty, $Props:ty; $Children:ty,
         fn layout |$layout_props:tt, $layout_children:tt| $layout_body:expr,
         fn style |$style_props:tt, $style_children:tt| $style_body:expr $(,)?
     ) => {
         $crate::component!(
-            impl $Component, $Props, $Children,
+            impl $Component, $Props; $Children,
             fn layout |$layout_props, $layout_children| $layout_body,
             fn style |$style_props, $style_children| $style_body,
         );
@@ -125,76 +125,76 @@ macro_rules! component {
 
     // Implements layout, style & view for $Component with closures
     (
-        $Component:ty, $Props:ty, $Children:ty,
+        $Component:ty, $Props:ty; $Children:ty,
         fn layout |$layout_props:tt, $layout_children:tt| $layout_body:expr,
         fn style |$style_props:tt, $style_children:tt| $style_body:expr,
         fn view |$view_props:tt, $view_children:tt| $view_body:expr $(,)?
     ) => {
         $crate::component!(
-            impl $Component, $Props, $Children,
+            impl $Component, $Props; $Children,
             fn layout |$layout_props, $layout_children| $layout_body,
             fn style |$style_props, $style_children| $style_body,
             fn view |$view_props, $view_children| $view_body,
         );
     };
     (
-        $Component:ty, $Props:ty, $Children:ty,
+        $Component:ty, $Props:ty; $Children:ty,
         fn layout |$layout_props:tt, $layout_children:tt| $layout_body:expr,
         fn view |$view_props:tt, $view_children:tt| $view_body:expr,
         fn style |$style_props:tt, $style_children:tt| $style_body:expr $(,)?
     ) => {
         $crate::component!(
-            impl $Component, $Props, $Children,
+            impl $Component, $Props; $Children,
             fn layout |$layout_props, $layout_children| $layout_body,
             fn style |$style_props, $style_children| $style_body,
             fn view |$view_props, $view_children| $view_body,
         );
     };
     (
-        $Component:ty, $Props:ty, $Children:ty,
+        $Component:ty, $Props:ty; $Children:ty,
         fn style |$style_props:tt, $style_children:tt| $style_body:expr,
         fn layout |$layout_props:tt, $layout_children:tt| $layout_body:expr,
         fn view |$view_props:tt, $view_children:tt| $view_body:expr $(,)?
     ) => {
         $crate::component!(
-            impl $Component, $Props, $Children,
+            impl $Component, $Props; $Children,
             fn layout |$layout_props, $layout_children| $layout_body,
             fn style |$style_props, $style_children| $style_body,
             fn view |$view_props, $view_children| $view_body,
         );
     };
     (
-        $Component:ty, $Props:ty, $Children:ty,
+        $Component:ty, $Props:ty; $Children:ty,
         fn style |$style_props:tt, $style_children:tt| $style_body:expr,
         fn view |$view_props:tt, $view_children:tt| $view_body:expr,
         fn layout |$layout_props:tt, $layout_children:tt| $layout_body:expr $(,)?
     ) => {
         $crate::component!(
-            impl $Component, $Props, $Children,
+            impl $Component, $Props; $Children,
             fn layout |$layout_props, $layout_children| $layout_body,
             fn style |$style_props, $style_children| $style_body,
             fn view |$view_props, $view_children| $view_body,
         );
     };
     (
-        $Component:ty, $Props:ty, $Children:ty,
+        $Component:ty, $Props:ty; $Children:ty,
         fn view |$view_props:tt, $view_children:tt| $view_body:expr,
         fn layout |$layout_props:tt, $layout_children:tt| $layout_body:expr,
         fn style |$style_props:tt, $style_children:tt| $style_body:expr $(,)?
     ) => {
-        $crate::component!(impl $Component, $Props, $Children,
+        $crate::component!(impl $Component, $Props; $Children,
             fn layout |$layout_props, $layout_children| $layout_body,
             fn style |$style_props, $style_children| $style_body,
             fn view |$view_props, $view_children| $view_body,
         );
     };
     (
-        $Component:ty, $Props:ty, $Children:ty,
+        $Component:ty, $Props:ty; $Children:ty,
         fn view |$view_props:tt, $view_children:tt| $view_body:expr,
         fn style |$style_props:tt, $style_children:tt| $style_body:expr,
         fn layout |$layout_props:tt, $layout_children:tt| $layout_body:expr $(,)?
     ) => {
-        $crate::component!(impl $Component, $Props, $Children,
+        $crate::component!(impl $Component, $Props; $Children,
             fn layout |$layout_props, $layout_children| $layout_body,
             fn style |$style_props, $style_children| $style_body,
             fn view |$view_props, $view_children| $view_body,
@@ -206,7 +206,7 @@ macro_rules! component {
     // =========================================================================
 
     (
-        impl $Component:ty, $Props:ty, $Children:ty,
+        impl $Component:ty, $Props:ty; $Children:ty,
         $(fn layout |$layout_props:tt, $layout_children:tt| $layout:expr,)?
         $(fn style |$style_props:tt, $style_children:tt| $style:expr,)?
         $(fn view |$view_props:tt, $view_children:tt| $view:expr,)?
