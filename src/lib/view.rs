@@ -1,17 +1,13 @@
 use super::element::ElementObject;
 
+pub type ViewElements = Vec<ViewElement>;
+pub type ElementObjects = Vec<ElementObject>;
+
 #[derive(Debug)]
 pub enum ViewElement {
-    None,
     Char(char),
     String(String),
     Element(ElementObject),
-}
-
-impl Default for ViewElement {
-    fn default() -> Self {
-        Self::None
-    }
 }
 
 impl From<char> for ViewElement {
@@ -33,7 +29,7 @@ impl From<ElementObject> for ViewElement {
 }
 
 #[derive(Debug)]
-pub struct View(pub Vec<ViewElement>);
+pub struct View(pub ViewElements);
 
 impl Default for View {
     fn default() -> Self {
@@ -59,8 +55,8 @@ impl From<ElementObject> for View {
     }
 }
 
-impl From<Vec<ElementObject>> for View {
-    fn from(v: Vec<ElementObject>) -> Self {
+impl From<ElementObjects> for View {
+    fn from(v: ElementObjects) -> Self {
         Self(v.into_iter().map(|e| e.into()).collect())
     }
 }
@@ -71,13 +67,13 @@ impl From<ViewElement> for View {
     }
 }
 
-impl From<Vec<ViewElement>> for View {
-    fn from(v: Vec<ViewElement>) -> Self {
+impl From<ViewElements> for View {
+    fn from(v: ViewElements) -> Self {
         Self(v)
     }
 }
 
-impl From<View> for Vec<ViewElement> {
+impl From<View> for ViewElements {
     fn from(v: View) -> Self {
         v.0
     }
