@@ -1,90 +1,112 @@
+use super::attributes::Attributes;
 use super::component::Component;
-use super::layout::Layout;
-use super::style::Style;
-use super::view::View;
 use std::fmt::Debug;
+use std::rc::Rc;
 
-pub type ElementObject = Box<dyn ElementTrait>;
+pub type ElementObject = Box<dyn Element>;
+pub type Elements = Vec<ElementObject>;
 
-pub trait ElementTrait: Debug {
-    fn layout(&self) -> Layout;
-
-    fn style(&self) -> Style;
-
-    fn view(self: Box<Self>) -> View;
-}
+// ========================
 
 #[derive(Debug)]
-pub struct Element<C>
+pub enum Children {
+    Char(char),
+    String(Rc<String>),
+    Elements(Elements),
+}
+
+impl Default for Children {
+    fn default() -> Self {
+        Self::Elements(Default::default())
+    }
+}
+
+impl From<char> for Children {
+    fn from(c: char) -> Self {
+        Self::Char(c)
+    }
+}
+
+impl From<Rc<String>> for Children {
+    fn from(s: Rc<String>) -> Self {
+        Self::String(s)
+    }
+}
+
+impl From<ElementObject> for Children {
+    fn from(e: ElementObject) -> Self {
+        Self::Elements(vec![e])
+    }
+}
+
+impl From<Elements> for Children {
+    fn from(e: Elements) -> Self {
+        Self::Elements(e)
+    }
+}
+
+// ==================
+
+pub trait Element: Debug {
+    fn attributes(&self) -> Attributes;
+
+    fn children(&self) -> Children;
+}
+
+impl Element for char {
+    fn attributes(&self) -> Attributes {
+        Default::default()
+    }
+
+    fn children(&self) -> Children {
+        (*self).into()
+    }
+}
+
+impl Element for Rc<String> {
+    fn attributes(&self) -> Attributes {
+        Default::default()
+    }
+
+    fn children(&self) -> Children {
+        (Rc::clone(self)).into()
+    }
+}
+
+impl<C> Element for (C, <C as Component>::Props)
 where
     C: Component,
 {
-    component: C,
-    pub props: <C as Component>::Props,
-    pub children: <C as Component>::Children,
+    fn attributes(&self) -> Attributes {
+        let (component, props) = self;
+        component.attributes(&props)
+    }
+
+    fn children(&self) -> Children {
+        let (component, props) = self;
+        component.children(props).into()
+    }
 }
 
-impl<C> Element<C>
+impl<C> Element for C
 where
     C: Component,
+    <C as Component>::Props: Default,
 {
-    pub fn new(
-        component: C,
-        props: <C as Component>::Props,
-        children: <C as Component>::Children,
-    ) -> Self {
-        Self {
-            component,
-            props,
-            children,
-        }
+    fn attributes(&self) -> Attributes {
+        <C as Component>::attributes(self, &Default::default())
     }
 
-    pub fn over_props<F>(self, f: F) -> Self
-    where
-        F: FnOnce(<C as Component>::Props) -> <C as Component>::Props,
-    {
-        Self {
-            component: self.component,
-            props: f(self.props),
-            children: self.children,
-        }
-    }
-
-    pub fn over_children<F>(self, f: F) -> Self
-    where
-        F: FnOnce(<C as Component>::Children) -> <C as Component>::Children,
-    {
-        Self {
-            component: self.component,
-            props: self.props,
-            children: f(self.children),
-        }
+    fn children(&self) -> Children {
+        <C as Component>::children(self, &Default::default()).into()
     }
 }
 
-impl<C> ElementTrait for Element<C>
+impl<E> From<E> for ElementObject
 where
-    C: Component + Debug,
+    E: Element + 'static,
 {
-    fn layout(&self) -> Layout {
-        self.component.layout(&self.props, &self.children)
-    }
-
-    fn style(&self) -> Style {
-        self.component.style(&self.props, &self.children)
-    }
-
-    fn view(self: Box<Self>) -> View {
-        self.component.view(self.props, self.children)
-    }
-}
-
-impl<C> From<Element<C>> for ElementObject
-where
-    C: Component + Debug + 'static,
-{
-    fn from(element: Element<C>) -> Self {
-        Box::new(element)
+    fn from(e: E) -> Self {
+        Box::new(e)
     }
 }

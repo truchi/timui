@@ -22,18 +22,7 @@ impl<T> Tree<T> {
         }
     }
 
-    // pub fn set_value(mut self, value: T) -> Self {
-    // self.value = value;
-    // self
-    // }
-    //
-    // pub fn set_parent(mut self, parent: Parent<T>) -> Self {
-    // self.parent = parent;
-    // self
-    // }
-    //
-    // pub fn set_children(mut self, children: Children<T>) -> Self {
-    // self.children = children;
-    // self
-    // }
+    pub fn get_value(&self) -> &T {
+        &self.value
+    }
 }

@@ -1,21 +1,15 @@
-use super::layout::Layout;
-use super::style::Style;
-use super::view::View;
+use super::attributes::Attributes;
+use super::element::Elements;
 use std::fmt::Debug;
 
-pub trait Component: Default {
-    type Props: Default + Debug;
-    type Children: Default + Debug;
+pub trait Component: Debug {
+    type Props: Debug;
 
-    fn layout(&self, _props: &Self::Props, _children: &Self::Children) -> Layout {
-        Layout::default()
+    fn attributes(&self, _props: &Self::Props) -> Attributes {
+        Attributes::default()
     }
 
-    fn style(&self, _props: &Self::Props, _children: &Self::Children) -> Style {
-        Style::default()
-    }
-
-    fn view(&self, _props: Self::Props, _children: Self::Children) -> View {
-        View::default()
+    fn children(&self, _props: &Self::Props) -> Elements {
+        vec![]
     }
 }
