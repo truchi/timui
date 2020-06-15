@@ -1,4 +1,4 @@
-use super::element::ElementObject;
+use super::component::element::ElementObject;
 use super::utils::tree::Tree;
 use std::cell::RefCell;
 use std::rc::Rc;

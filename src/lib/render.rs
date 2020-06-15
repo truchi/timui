@@ -1,5 +1,5 @@
-use super::element::Element;
-use super::element::ElementObject;
+use super::component::element::Element;
+use super::component::element::ElementObject;
 use super::ui::UI;
 
 pub fn render<E: Element + 'static>(element: E) {
