@@ -1,5 +1,6 @@
 use lib::component::Component;
 use lib::element::Elements;
+use lib::layout::{Dimension, JustifyContent, Layout, Size};
 use lib::render::render;
 
 #[derive(Default, Debug)]
@@ -9,6 +10,17 @@ pub type RootChildren = ();
 
 impl Component for Root {
     type Props = RootProps;
+
+    fn layout(&self, _props: &Self::Props) -> Layout {
+        Layout {
+            size: Size {
+                width: Dimension::Points(100.0),
+                height: Dimension::Points(100.0),
+            },
+            justify_content: JustifyContent::Center,
+            ..Default::default()
+        }
+    }
 
     fn children(&self, _props: &Self::Props) -> Elements {
         vec![
@@ -25,6 +37,16 @@ impl Component for Root {
 pub struct Comp2;
 impl Component for Comp2 {
     type Props = char;
+
+    fn layout(&self, _props: &Self::Props) -> Layout {
+        Layout {
+            size: Size {
+                width: Dimension::Percent(0.1),
+                height: Dimension::Auto,
+            },
+            ..Default::default()
+        }
+    }
 
     fn children(&self, _props: &Self::Props) -> Elements {
         vec![
