@@ -1,4 +1,14 @@
 pub use stretch::geometry::{Rect, Size};
 pub use stretch::number::Number;
+pub use stretch::style::AlignContent;
+pub use stretch::style::AlignItems;
+pub use stretch::style::AlignSelf;
+pub use stretch::style::Dimension;
+pub use stretch::style::Direction;
+pub use stretch::style::Display;
+pub use stretch::style::FlexDirection;
+pub use stretch::style::FlexWrap;
+pub use stretch::style::JustifyContent;
+pub use stretch::style::Overflow;
+pub use stretch::style::PositionType;
 pub use stretch::style::Style as Layout;
-pub use stretch::style::*;

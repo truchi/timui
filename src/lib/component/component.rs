@@ -1,10 +1,14 @@
-use super::{Elements, Layout};
+use super::{Elements, Layout, Style};
 use std::fmt::Debug;
 
 pub trait Component: Debug {
     type Props: Debug;
 
     fn layout(&self, _props: &Self::Props) -> Layout {
+        Default::default()
+    }
+
+    fn style(&self, _props: &Self::Props) -> Style {
         Default::default()
     }
 

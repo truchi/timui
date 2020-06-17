@@ -1,6 +1,5 @@
 #[derive(Debug)]
 pub enum Color {
-    AnsiValue,
     Black,
     Blue,
     Cyan,
@@ -13,6 +12,7 @@ pub enum Color {
     LightRed,
     LightWhite,
     LightYellow,
+    Transparent,
     Magenta,
     Red,
     Rgb,
@@ -20,11 +20,23 @@ pub enum Color {
     Yellow,
 }
 
-#[derive(Default, Debug)]
+#[derive(Debug)]
 pub struct Style {
-    foreground: Option<Color>,
-    background: Option<Color>,
+    foreground: Color,
+    background: Color,
     bold: Option<bool>,
     italic: Option<bool>,
     underline: Option<bool>,
+}
+
+impl Default for Style {
+    fn default() -> Self {
+        Self {
+            foreground: Color::White,
+            background: Color::Transparent,
+            bold: Default::default(),
+            italic: Default::default(),
+            underline: Default::default(),
+        }
+    }
 }
