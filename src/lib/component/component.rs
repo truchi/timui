@@ -1,5 +1,4 @@
-use super::Elements;
-use crate::layout::Layout;
+use super::{Elements, Layout};
 use std::fmt::Debug;
 
 pub trait Component: Debug {

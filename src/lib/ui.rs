@@ -1,6 +1,6 @@
-use super::component::ElementObject;
+use super::component::{ElementObject, Number, Size};
 use super::utils::tree::Node;
-use crate::layout::{LayoutNode, Number, Size};
+use crate::layout::LayoutNode;
 use std::fmt::{Debug, Formatter, Result};
 
 struct Wrap(ElementObject, LayoutNode);

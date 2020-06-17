@@ -1,5 +1,4 @@
-use lib::component::{Component, Elements};
-use lib::layout::{Dimension, JustifyContent, Layout, Size};
+use lib::component::{Component, Dimension, Elements, JustifyContent, Layout, Size};
 use lib::render::render;
 
 #[derive(Default, Debug)]

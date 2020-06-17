@@ -1,5 +1,4 @@
-use super::component::{Element, ElementObject};
-use super::layout::{Number, Size};
+use super::component::{Element, ElementObject, Number, Size};
 use super::ui::UI;
 use termion::terminal_size;
 
