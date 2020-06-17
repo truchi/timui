@@ -1,5 +1,5 @@
-use super::component::Component;
-use super::layout::Layout;
+use super::Component;
+use crate::layout::Layout;
 use std::fmt::Debug;
 
 pub type ElementObject = Box<dyn Element>;
