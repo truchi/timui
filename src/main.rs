@@ -13,8 +13,8 @@ impl Component for Root {
     fn layout(&self, _props: &Self::Props) -> Layout {
         Layout {
             size: Size {
-                width: Dimension::Points(100.0),
-                height: Dimension::Points(100.0),
+                width: Dimension::Percent(1.0),
+                height: Dimension::Percent(1.0),
             },
             justify_content: JustifyContent::Center,
             ..Default::default()
@@ -22,13 +22,7 @@ impl Component for Root {
     }
 
     fn children(&self, _props: &Self::Props) -> Elements {
-        vec![
-            String::from("ROOT").into(),
-            Comp2.into(),
-            Comp2.into(),
-            Comp2.into(),
-            (Comp2, '2').into(),
-        ]
+        vec![().into(), 'a'.into(), String::from("ROOT").into()]
     }
 }
 

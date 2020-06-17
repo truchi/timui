@@ -40,11 +40,11 @@ impl<T> Node<T> {
         self.borrow_mut().children = children;
     }
 
-    fn borrow(&self) -> Ref<Tree<T>> {
+    pub fn borrow(&self) -> Ref<Tree<T>> {
         self.0.borrow()
     }
 
-    fn borrow_mut(&self) -> RefMut<Tree<T>> {
+    pub fn borrow_mut(&self) -> RefMut<Tree<T>> {
         self.0.borrow_mut()
     }
 
@@ -57,5 +57,5 @@ impl<T> Node<T> {
 pub struct Tree<T> {
     value: T,
     parent: Parent<T>,
-    children: Vec<Node<T>>,
+    pub children: Vec<Node<T>>,
 }

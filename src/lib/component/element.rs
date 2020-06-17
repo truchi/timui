@@ -1,5 +1,5 @@
 use super::Component;
-use crate::layout::Layout;
+use crate::layout::{Dimension, Layout, Size};
 use std::fmt::Debug;
 
 pub type ElementObject = Box<dyn Element>;
@@ -15,7 +15,17 @@ pub trait Element: Debug {
     }
 }
 
-impl Element for char {}
+impl Element for char {
+    fn layout(&self) -> Layout {
+        Layout {
+            size: Size {
+                width: Dimension::Points(1.0),
+                height: Dimension::Points(1.0),
+            },
+            ..Default::default()
+        }
+    }
+}
 
 impl Element for String {}
 

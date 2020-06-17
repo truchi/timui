@@ -13,6 +13,10 @@ pub fn render<E: Element + 'static>(element: E) {
     let ui: UI = element.into();
     println!("{:#?}", ui);
     ui.compute_layout(size);
-    let layout = ui.root.layout_node(|x| x.layout());
-    dbg!(layout);
+
+    dbg!(size);
+    dbg!(ui.root.layout_node(|x| x.layout()));
+    for child in ui.root.borrow().children.iter() {
+        dbg!(child.layout_node(|x| x.layout()));
+    }
 }
