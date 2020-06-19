@@ -8,6 +8,10 @@ pub fn render<E: Element + 'static>(element: E) {
         width: Number::Defined(width as f32),
         height: Number::Defined(height as f32),
     };
+    // let size = Size {
+    // width: Number::Defined(100.0),
+    // height: Number::Defined(100.0),
+    // };
     let element: ElementObject = element.into();
     let ui: UI = element.into();
     println!("{:#?}", ui);

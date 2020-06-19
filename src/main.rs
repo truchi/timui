@@ -1,4 +1,6 @@
-use lib::component::{Component, Dimension, Elements, JustifyContent, Layout, Size};
+use lib::component::{
+    Component, Dimension, Elements, JustifyContent, Layout, PositionType, Rect, Size,
+};
 use lib::render::render;
 
 #[derive(Default, Debug)]
@@ -21,7 +23,11 @@ impl Component for Root {
     }
 
     fn children(&self, _props: &Self::Props) -> Elements {
-        vec![().into(), 'a'.into(), String::from("ROOT").into()]
+        vec![
+            Comp2.into(),
+            // ().into(),
+            // 'a'.into(),
+        ]
     }
 }
 
@@ -34,18 +40,14 @@ impl Component for Comp2 {
         Layout {
             size: Size {
                 width: Dimension::Percent(0.1),
-                height: Dimension::Auto,
+                height: Dimension::Percent(0.1),
             },
             ..Default::default()
         }
     }
 
     fn children(&self, _props: &Self::Props) -> Elements {
-        vec![
-            String::from("COMP 2").into(),
-            Comp3.into(),
-            (Comp3, 'a').into(),
-        ]
+        vec![Comp3.into(), ().into(), 'a'.into()]
     }
 }
 
