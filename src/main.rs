@@ -1,7 +1,6 @@
-use lib::component::{
-    Component, Dimension, Elements, JustifyContent, Layout, PositionType, Rect, Size,
-};
+use lib::component::{Component, Elements};
 use lib::render::render;
+use lib::style::{Percent, Style};
 
 #[derive(Default, Debug)]
 pub struct Root;
@@ -11,15 +10,11 @@ pub type RootChildren = ();
 impl Component for Root {
     type Props = RootProps;
 
-    fn layout(&self, _props: &Self::Props) -> Layout {
-        Layout {
-            size: Size {
-                width: Dimension::Percent(1.0),
-                height: Dimension::Percent(1.0),
-            },
-            justify_content: JustifyContent::Center,
-            ..Default::default()
-        }
+    fn style(&self, _props: &Self::Props) -> Style {
+        Style::new()
+            .width(Percent(1.0))
+            .height(Percent(1.0))
+            .justify_center()
     }
 
     fn children(&self, _props: &Self::Props) -> Elements {
@@ -36,14 +31,8 @@ pub struct Comp2;
 impl Component for Comp2 {
     type Props = char;
 
-    fn layout(&self, _props: &Self::Props) -> Layout {
-        Layout {
-            size: Size {
-                width: Dimension::Percent(0.1),
-                height: Dimension::Percent(0.1),
-            },
-            ..Default::default()
-        }
+    fn style(&self, _props: &Self::Props) -> Style {
+        Style::new().width(Percent(0.1)).height(Percent(0.1))
     }
 
     fn children(&self, _props: &Self::Props) -> Elements {

@@ -1,12 +1,13 @@
-use super::component::{Element, ElementObject, Number, Size};
-use super::ui::UI;
+use crate::component::{Element, ElementObject};
+use crate::style::{Defined, Size};
+use crate::ui::UI;
 use termion::terminal_size;
 
 pub fn render<E: Element + 'static>(element: E) {
     let (width, height) = terminal_size().unwrap();
     let size = Size {
-        width: Number::Defined(width as f32),
-        height: Number::Defined(height as f32),
+        width: Defined(width as f32),
+        height: Defined(height as f32),
     };
     // let size = Size {
     // width: Number::Defined(100.0),

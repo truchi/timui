@@ -1,6 +1,7 @@
-use super::component::{ElementObject, Number, Size};
-use super::utils::tree::Node;
+use crate::component::ElementObject;
 use crate::layout::LayoutNode;
+use crate::style::{Number, Size};
+use crate::utils::tree::Node;
 use std::fmt::{Debug, Formatter, Result};
 
 struct Wrap(ElementObject, LayoutNode);
@@ -62,10 +63,10 @@ impl UINode {
 
 impl From<Wrap> for UINode {
     fn from(Wrap(element, layout_node): Wrap) -> Self {
-        let layout = element.layout();
+        let style = element.style();
         let elements = element.children();
         let node = Self::new(UIElement::new(element, layout_node));
-        node.layout_node(|x| x.set_style(layout));
+        node.layout_node(|x| x.set_style(style.layout));
 
         let len = elements.len();
         let mut children = Vec::with_capacity(len);

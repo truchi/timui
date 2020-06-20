@@ -1,14 +1,11 @@
-use crate::component::{Component, Dimension, Layout, Size, Style};
+use super::Component;
+use crate::style::{Points, Style};
 use std::fmt::Debug;
 
 pub type ElementObject = Box<dyn Element>;
 pub type Elements = Vec<ElementObject>;
 
 pub trait Element: Debug {
-    fn layout(&self) -> Layout {
-        Default::default()
-    }
-
     fn style(&self) -> Style {
         Default::default()
     }
@@ -19,14 +16,8 @@ pub trait Element: Debug {
 }
 
 impl Element for char {
-    fn layout(&self) -> Layout {
-        Layout {
-            size: Size {
-                width: Dimension::Points(1.0),
-                height: Dimension::Points(1.0),
-            },
-            ..Default::default()
-        }
+    fn style(&self) -> Style {
+        Style::new().width(Points(1.0)).height(Points(1.0))
     }
 }
 
@@ -36,10 +27,6 @@ impl<C: Component> Element for C
 where
     <C as Component>::Props: Default,
 {
-    fn layout(&self) -> Layout {
-        Component::layout(self, &Default::default())
-    }
-
     fn style(&self) -> Style {
         Component::style(self, &Default::default())
     }
@@ -50,10 +37,6 @@ where
 }
 
 impl<C: Component> Element for (C, <C as Component>::Props) {
-    fn layout(&self) -> Layout {
-        Component::layout(&self.0, &self.1)
-    }
-
     fn style(&self) -> Style {
         Component::style(&self.0, &self.1)
     }
