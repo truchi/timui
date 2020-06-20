@@ -1,234 +1,10 @@
-use stretch::geometry::Rect as StretchRect;
-use stretch::geometry::Size as StretchSize;
-use stretch::number::Number;
-pub use stretch::style::AlignContent;
-pub use stretch::style::AlignItems;
-pub use stretch::style::AlignSelf;
-use stretch::style::Dimension as StretchDimension;
-pub use stretch::style::Direction;
-pub use stretch::style::Display;
-pub use stretch::style::FlexDirection;
-pub use stretch::style::FlexWrap;
-pub use stretch::style::JustifyContent;
-pub use stretch::style::Overflow;
-pub use stretch::style::PositionType;
-use stretch::style::Style as StretchStyle;
+use super::color_style::*;
+use super::layout_style::*;
 
-#[derive(Copy, Clone, PartialEq, Debug)]
-pub enum Dimension {
-    Undefined,
-    Auto,
-    Points(usize),
-    Percent(usize),
-}
-
-impl Default for Dimension {
-    fn default() -> Self {
-        Self::Undefined
-    }
-}
-
-impl From<Dimension> for StretchDimension {
-    fn from(dimension: Dimension) -> Self {
-        match dimension {
-            Dimension::Undefined => Self::Undefined,
-            Dimension::Auto => Self::Auto,
-            Dimension::Points(v) => Self::Points(v as f32),
-            Dimension::Percent(v) => Self::Percent((v as f32) / 100.0),
-        }
-    }
-}
-
-pub trait Rect {
-    fn rect(self) -> StretchRect<StretchDimension>;
-}
-
-impl Rect for () {
-    fn rect(self) -> StretchRect<StretchDimension> {
-        Default::default()
-    }
-}
-
-impl Rect for Dimension {
-    fn rect(self) -> StretchRect<StretchDimension> {
-        StretchRect {
-            start: self.into(),
-            end: self.into(),
-            top: self.into(),
-            bottom: self.into(),
-        }
-    }
-}
-
-impl Rect for (Dimension, Dimension) {
-    fn rect(self) -> StretchRect<StretchDimension> {
-        StretchRect {
-            start: self.0.into(),
-            end: self.0.into(),
-            top: self.1.into(),
-            bottom: self.1.into(),
-        }
-    }
-}
-
-impl Rect for [Dimension; 2] {
-    fn rect(self) -> StretchRect<StretchDimension> {
-        StretchRect {
-            start: self[0].into(),
-            end: self[0].into(),
-            top: self[1].into(),
-            bottom: self[1].into(),
-        }
-    }
-}
-
-impl Rect for (Dimension, Dimension, Dimension, Dimension) {
-    fn rect(self) -> StretchRect<StretchDimension> {
-        StretchRect {
-            start: self.0.into(),
-            end: self.1.into(),
-            top: self.2.into(),
-            bottom: self.3.into(),
-        }
-    }
-}
-
-impl Rect for [Dimension; 4] {
-    fn rect(self) -> StretchRect<StretchDimension> {
-        StretchRect {
-            start: self[0].into(),
-            end: self[1].into(),
-            top: self[2].into(),
-            bottom: self[3].into(),
-        }
-    }
-}
-
-pub trait Size {
-    fn size(self) -> StretchSize<StretchDimension>;
-}
-
-impl Size for () {
-    fn size(self) -> StretchSize<StretchDimension> {
-        Default::default()
-    }
-}
-
-impl Size for Dimension {
-    fn size(self) -> StretchSize<StretchDimension> {
-        StretchSize {
-            width: self.into(),
-            height: self.into(),
-        }
-    }
-}
-
-impl Size for (Dimension, Dimension) {
-    fn size(self) -> StretchSize<StretchDimension> {
-        StretchSize {
-            width: self.0.into(),
-            height: self.1.into(),
-        }
-    }
-}
-
-impl Size for [Dimension; 2] {
-    fn size(self) -> StretchSize<StretchDimension> {
-        StretchSize {
-            width: self[0].into(),
-            height: self[1].into(),
-        }
-    }
-}
-
-pub trait Bounds {
-    fn bounds(self) -> (Dimension, Dimension);
-}
-
-impl Bounds for () {
-    fn bounds(self) -> (Dimension, Dimension) {
-        Default::default()
-    }
-}
-
-impl Bounds for Dimension {
-    fn bounds(self) -> (Dimension, Dimension) {
-        (self, self)
-    }
-}
-
-impl Bounds for (Dimension, Dimension) {
-    fn bounds(self) -> (Dimension, Dimension) {
-        (self.0, self.1)
-    }
-}
-
-impl Bounds for [Dimension; 2] {
-    fn bounds(self) -> (Dimension, Dimension) {
-        (self[0], self[1])
-    }
-}
-
-#[derive(Clone, Copy, PartialEq, Debug)]
-pub enum InheritBoolean {
-    Inherit,
-    True,
-    False,
-}
-
-impl Default for InheritBoolean {
-    fn default() -> Self {
-        Self::Inherit
-    }
-}
-
-#[derive(Clone, Copy, PartialEq, Debug)]
-pub enum Color {
-    Black,
-    Blue,
-    Cyan,
-    Green,
-    LightBlack,
-    LightBlue,
-    LightCyan,
-    LightGreen,
-    LightMagenta,
-    LightRed,
-    LightWhite,
-    LightYellow,
-    Transparent,
-    Magenta,
-    Red,
-    Rgb,
-    White,
-    Yellow,
-}
-
-#[derive(Clone, Copy, PartialEq, Debug)]
-pub struct ColorStyle {
-    foreground: Color,
-    background: Color,
-    bold: InheritBoolean,
-    italic: InheritBoolean,
-    underline: InheritBoolean,
-}
-
-impl Default for ColorStyle {
-    fn default() -> Self {
-        Self {
-            foreground: Color::White,
-            background: Color::Transparent,
-            bold: Default::default(),
-            italic: Default::default(),
-            underline: Default::default(),
-        }
-    }
-}
-
-#[derive(Default, Debug)]
+#[derive(Copy, Clone, Default, Debug)]
 pub struct Style {
-    layout: StretchStyle,
-    color: ColorStyle,
+    pub layout: LayoutStyle,
+    pub color: ColorStyle,
 }
 
 impl Style {
@@ -380,6 +156,10 @@ impl Style {
         self
     }
 
+    pub fn self_auto(self) -> Self {
+        self.align_self(AlignSelf::Auto)
+    }
+
     pub fn self_start(self) -> Self {
         self.align_self(AlignSelf::FlexStart)
     }
@@ -458,115 +238,115 @@ impl Style {
         self.justify_content(JustifyContent::SpaceAround)
     }
 
-    pub fn justify_envenly(self) -> Self {
+    pub fn justify_evenly(self) -> Self {
         self.justify_content(JustifyContent::SpaceEvenly)
     }
 
     // POSITION
 
-    pub fn position(mut self, position: impl Rect) -> Self {
-        self.layout.position = position.rect();
+    pub fn position(mut self, position: Rect<Dimension>) -> Self {
+        self.layout.position = position;
         self
     }
 
     pub fn start(mut self, start: Dimension) -> Self {
-        self.layout.position.start = start.into();
+        self.layout.position.start = start;
         self
     }
 
     pub fn end(mut self, end: Dimension) -> Self {
-        self.layout.position.end = end.into();
+        self.layout.position.end = end;
         self
     }
 
     pub fn top(mut self, top: Dimension) -> Self {
-        self.layout.position.top = top.into();
+        self.layout.position.top = top;
         self
     }
 
     pub fn bottom(mut self, bottom: Dimension) -> Self {
-        self.layout.position.bottom = bottom.into();
+        self.layout.position.bottom = bottom;
         self
     }
 
     // MARGIN
 
-    pub fn margin(mut self, margin: impl Rect) -> Self {
-        self.layout.margin = margin.rect();
+    pub fn margin(mut self, margin: Rect<Dimension>) -> Self {
+        self.layout.margin = margin;
         self
     }
 
     pub fn margin_start(mut self, start: Dimension) -> Self {
-        self.layout.margin.start = start.into();
+        self.layout.margin.start = start;
         self
     }
 
     pub fn margin_end(mut self, end: Dimension) -> Self {
-        self.layout.margin.end = end.into();
+        self.layout.margin.end = end;
         self
     }
 
     pub fn margin_top(mut self, top: Dimension) -> Self {
-        self.layout.margin.top = top.into();
+        self.layout.margin.top = top;
         self
     }
 
     pub fn margin_bottom(mut self, bottom: Dimension) -> Self {
-        self.layout.margin.bottom = bottom.into();
+        self.layout.margin.bottom = bottom;
         self
     }
 
     // PADDING
 
-    pub fn padding(mut self, padding: impl Rect) -> Self {
-        self.layout.margin = padding.rect();
+    pub fn padding(mut self, padding: Rect<Dimension>) -> Self {
+        self.layout.margin = padding;
         self
     }
 
     pub fn padding_start(mut self, start: Dimension) -> Self {
-        self.layout.padding.start = start.into();
+        self.layout.padding.start = start;
         self
     }
 
     pub fn padding_end(mut self, end: Dimension) -> Self {
-        self.layout.padding.end = end.into();
+        self.layout.padding.end = end;
         self
     }
 
     pub fn padding_top(mut self, top: Dimension) -> Self {
-        self.layout.padding.top = top.into();
+        self.layout.padding.top = top;
         self
     }
 
     pub fn padding_bottom(mut self, bottom: Dimension) -> Self {
-        self.layout.padding.bottom = bottom.into();
+        self.layout.padding.bottom = bottom;
         self
     }
 
     // BORDER
 
-    pub fn border(mut self, border: impl Rect) -> Self {
-        self.layout.border = border.rect();
+    pub fn border(mut self, border: Rect<Dimension>) -> Self {
+        self.layout.border = border;
         self
     }
 
     pub fn border_start(mut self, start: Dimension) -> Self {
-        self.layout.border.start = start.into();
+        self.layout.border.start = start;
         self
     }
 
     pub fn border_end(mut self, end: Dimension) -> Self {
-        self.layout.border.end = end.into();
+        self.layout.border.end = end;
         self
     }
 
     pub fn border_top(mut self, top: Dimension) -> Self {
-        self.layout.border.top = top.into();
+        self.layout.border.top = top;
         self
     }
 
     pub fn border_bottom(mut self, bottom: Dimension) -> Self {
-        self.layout.border.bottom = bottom.into();
+        self.layout.border.bottom = bottom;
         self
     }
 
@@ -583,50 +363,59 @@ impl Style {
     }
 
     pub fn basis(mut self, basis: Dimension) -> Self {
-        self.layout.flex_basis = basis.into();
+        self.layout.flex_basis = basis;
         self
     }
 
-    // MIN/MAX SIZE
+    // SIZE
 
-    pub fn min(mut self, size: impl Size) -> Self {
-        self.layout.min_size = size.size();
+    pub fn size(mut self, size: Size<Dimension>) -> Self {
+        self.layout.size = size;
         self
     }
 
-    pub fn max(mut self, size: impl Size) -> Self {
-        self.layout.max_size = size.size();
+    pub fn width(mut self, width: Dimension) -> Self {
+        self.layout.size.width = width;
+        self
+    }
+
+    pub fn height(mut self, height: Dimension) -> Self {
+        self.layout.size.height = height;
+        self
+    }
+
+    // MIN SIZE
+
+    pub fn min_size(mut self, size: Size<Dimension>) -> Self {
+        self.layout.min_size = size;
         self
     }
 
     pub fn min_width(mut self, width: Dimension) -> Self {
-        self.layout.min_size.width = width.into();
+        self.layout.min_size.width = width;
         self
     }
 
     pub fn min_height(mut self, height: Dimension) -> Self {
-        self.layout.min_size.height = height.into();
+        self.layout.min_size.height = height;
+        self
+    }
+
+    // MAX SIZE
+
+    pub fn max_size(mut self, size: Size<Dimension>) -> Self {
+        self.layout.max_size = size;
         self
     }
 
     pub fn max_width(mut self, width: Dimension) -> Self {
-        self.layout.max_size.width = width.into();
+        self.layout.max_size.width = width;
         self
     }
 
     pub fn max_height(mut self, height: Dimension) -> Self {
-        self.layout.max_size.height = height.into();
+        self.layout.max_size.height = height;
         self
-    }
-
-    pub fn width(self, bounds: impl Bounds) -> Self {
-        let (min, max) = bounds.bounds();
-        self.min_width(min).max_width(max)
-    }
-
-    pub fn height(self, bounds: impl Bounds) -> Self {
-        let (min, max) = bounds.bounds();
-        self.min_height(min).max_height(max)
     }
 
     // ASPECT RATIO
@@ -636,54 +425,66 @@ impl Style {
         self
     }
 
+    // FORE/BACK-GROUND
+
+    pub fn foreground(mut self, color: Color) -> Self {
+        self.color.foreground = color;
+        self
+    }
+
+    pub fn background(mut self, color: Color) -> Self {
+        self.color.background = color;
+        self
+    }
+
     // BOLD
 
     pub fn bold(mut self) -> Self {
-        self.color.bold = InheritBoolean::True;
+        self.color.bold = Some(true);
         self
     }
 
     pub fn no_bold(mut self) -> Self {
-        self.color.bold = InheritBoolean::False;
+        self.color.bold = Some(false);
         self
     }
 
     pub fn inherit_bold(mut self) -> Self {
-        self.color.bold = InheritBoolean::Inherit;
+        self.color.bold = None;
         self
     }
 
     // ITALIC
 
     pub fn italic(mut self) -> Self {
-        self.color.italic = InheritBoolean::True;
+        self.color.italic = Some(true);
         self
     }
 
     pub fn no_italic(mut self) -> Self {
-        self.color.italic = InheritBoolean::False;
+        self.color.italic = Some(false);
         self
     }
 
     pub fn inherit_italic(mut self) -> Self {
-        self.color.italic = InheritBoolean::Inherit;
+        self.color.italic = None;
         self
     }
 
     // UNDERLINE
 
     pub fn underline(mut self) -> Self {
-        self.color.underline = InheritBoolean::True;
+        self.color.underline = Some(true);
         self
     }
 
     pub fn no_underline(mut self) -> Self {
-        self.color.underline = InheritBoolean::False;
+        self.color.underline = Some(false);
         self
     }
 
     pub fn inherit_underline(mut self) -> Self {
-        self.color.underline = InheritBoolean::Inherit;
+        self.color.underline = None;
         self
     }
 }
