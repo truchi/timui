@@ -14,7 +14,7 @@ pub fn render<E: Element + 'static>(element: E) {
     // height: Number::Defined(100.0),
     // };
     let element: ElementObject = element.into();
-    let ui: UI = element.into();
+    let mut ui: UI = element.into();
     // println!("{:#?}", ui);
 
     ui.render(size);

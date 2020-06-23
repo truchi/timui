@@ -2,7 +2,9 @@ use crate::component::ElementObject;
 use crate::paint::Paint;
 use crate::style::{ColorStyleInherited, Number, Size, Style};
 use crate::utils::tree::Node;
+use std::cell::RefCell;
 use std::fmt::{Debug, Formatter, Result};
+use std::rc::Rc;
 use stretch::node::Node as Id;
 use stretch::node::Stretch;
 
@@ -22,13 +24,13 @@ impl Debug for UIElement {
     }
 }
 
-struct Context {
-    stretch: Stretch,
+struct Context<'ui> {
+    stretch: &'ui mut Stretch,
     inherited: ColorStyleInherited,
 }
 
 impl UINode {
-    fn before(&self, ctx: Context) -> Context {
+    fn before<'ui>(&self, ctx: Context<'ui>) -> Context<'ui> {
         println!("before");
 
         let layout = ctx.stretch.layout(self.get_value().id).unwrap();
@@ -38,7 +40,7 @@ impl UINode {
         ctx
     }
 
-    fn after(&self, ctx: Context) -> Context {
+    fn after<'ui>(&self, ctx: Context<'ui>) -> Context<'ui> {
         println!("after");
         ctx
     }
@@ -56,11 +58,11 @@ impl UI {
             .unwrap();
     }
 
-    pub fn render(mut self, size: Size<Number>) {
+    pub fn render(&mut self, size: Size<Number>) {
         self.compute_layout(size);
 
         let ctx = Context {
-            stretch: self.stretch,
+            stretch: &mut self.stretch,
             inherited: Default::default(),
         };
 

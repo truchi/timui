@@ -20,9 +20,9 @@ impl Component for Root {
     fn children(&self, _props: &Self::Props) -> Elements {
         vec![
             //
-            // Comp2.into(),
-            // ().into(),
-            // 'a'.into(),
+            Comp2.into(),
+            ().into(),
+            'a'.into(),
         ]
     }
 }
@@ -39,9 +39,9 @@ impl Component for Comp2 {
     fn children(&self, _props: &Self::Props) -> Elements {
         vec![
             //
-            // Comp3.into(),
-            // ().into(),
-            // 'a'.into(),
+            Comp3.into(),
+            ().into(),
+            'a'.into(),
         ]
     }
 }
