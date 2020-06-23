@@ -20,22 +20,6 @@ pub struct Paint {
     // borders: Borders,
 }
 
-impl Paint {
-    // pub fn new(layout: Layout, style: Style) -> Self {
-    // println!("{:#?}", layout);
-    // let background = Uniform::new();
-    // Self {
-    // background: Layer::Uniform(Uniform {
-    // x: layout.location.x as usize,
-    // y: layout.location.y as usize,
-    // width: layout.size.width as usize,
-    // height: layout.size.height as usize,
-    // }),
-    // ..Default::default()
-    // }
-    // }
-}
-
 impl From<(Layout, ColorStyleInherited)> for Paint {
     fn from((layout, style): (Layout, ColorStyleInherited)) -> Self {
         Self {
