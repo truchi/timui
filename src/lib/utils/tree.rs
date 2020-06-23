@@ -20,6 +20,10 @@ impl<T> Node<T> {
         Ref::map(self.borrow(), |node| &node.value)
     }
 
+    pub fn get_value_mut(&self) -> RefMut<T> {
+        RefMut::map(self.borrow_mut(), |node| &mut node.value)
+    }
+
     pub fn set_value(&self, value: T) {
         self.borrow_mut().value = value;
     }
@@ -40,12 +44,12 @@ impl<T> Node<T> {
         self.borrow_mut().children = children;
     }
 
-    pub fn recurs<C>(&self, mut ctx: C, before: fn(C, &Self) -> C, after: fn(C, &Self) -> C) -> C {
-        ctx = before(ctx, self);
+    pub fn recurs<C>(&self, mut ctx: C, before: fn(&Self, C) -> C, after: fn(&Self, C) -> C) -> C {
+        ctx = before(self, ctx);
         for child in self.borrow().children.iter() {
             ctx = child.recurs(ctx, before, after);
         }
-        after(ctx, self)
+        after(self, ctx)
     }
 
     fn borrow(&self) -> Ref<Tree<T>> {

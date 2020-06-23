@@ -1,10 +1,11 @@
+use super::color::*;
 use super::color_style::*;
 use super::layout_style::*;
 
 #[derive(Copy, Clone, Default, Debug)]
 pub struct Style {
-    pub layout: LayoutStyle,
-    pub color: ColorStyle,
+    pub(crate) layout: LayoutStyle,
+    pub(crate) color: ColorStyle,
 }
 
 impl Style {
@@ -428,7 +429,12 @@ impl Style {
     // FORE/BACK-GROUND
 
     pub fn foreground(mut self, color: Color) -> Self {
-        self.color.foreground = color;
+        self.color.foreground = Some(color);
+        self
+    }
+
+    pub fn inherit_foreground(mut self) -> Self {
+        self.color.foreground = None;
         self
     }
 

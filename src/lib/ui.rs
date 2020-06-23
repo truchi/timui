@@ -1,7 +1,6 @@
 use crate::component::ElementObject;
 use crate::paint::Paint;
-use crate::style::Style;
-use crate::style::{Number, Size};
+use crate::style::{ColorStyleInherited, Number, Size, Style};
 use crate::utils::tree::Node;
 use std::fmt::{Debug, Formatter, Result};
 use stretch::node::Node as Id;
@@ -17,19 +16,31 @@ pub struct UIElement {
     paint: Paint,
 }
 
-impl UIElement {
-    // pub fn new(element: ElementObject, layout_node: LayoutNode, paint: Paint) -> Self {
-    // Self {
-    // element,
-    // layout_node,
-    // paint,
-    // }
-    // }
-}
-
 impl Debug for UIElement {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         <ElementObject as Debug>::fmt(&self.element, f)
+    }
+}
+
+struct Context {
+    stretch: Stretch,
+    inherited: ColorStyleInherited,
+}
+
+impl UINode {
+    fn before(&self, ctx: Context) -> Context {
+        println!("before");
+
+        let layout = ctx.stretch.layout(self.get_value().id).unwrap();
+        let style = self.get_value().style.color.inherit(ctx.inherited);
+        self.get_value_mut().paint = Paint::from((*layout, style));
+
+        ctx
+    }
+
+    fn after(&self, ctx: Context) -> Context {
+        println!("after");
+        ctx
     }
 }
 
@@ -39,30 +50,21 @@ pub struct UI {
 }
 
 impl UI {
-    pub fn compute_layout(&self, size: Size<Number>) {
-        // self.root.layout_node(|x| x.compute_layout(size));
+    pub fn compute_layout(&mut self, size: Size<Number>) {
+        self.stretch
+            .compute_layout(self.root.get_value().id, size)
+            .unwrap();
     }
 
-    pub fn render(&self, size: Size<Number>) {
+    pub fn render(mut self, size: Size<Number>) {
         self.compute_layout(size);
 
-        fn before(i: usize, node: &UINode) -> usize {
-            println!("I: {}", i);
-            // println!("I: {}, BEFORE {:#?}", i, node.element(|x| x.style()));
-            ();
-            // let style = node.element(|x| x.style());
-            // let layout = node.layout_node(|x| x.layout());
-            // node.get_mut(|ui_element| ui_element.paint = Paint::new(layout, style));
-            i + 1
-        }
+        let ctx = Context {
+            stretch: self.stretch,
+            inherited: Default::default(),
+        };
 
-        fn after(i: usize, node: &UINode) -> usize {
-            println!("I: {}", i);
-            // println!("I: {}, AFTER {:#?}", i, node.element(|x| x.style()));
-            i - 1
-        }
-
-        self.root.recurs(0, before, after);
+        self.root.recurs(ctx, UINode::before, UINode::after);
     }
 }
 
@@ -78,24 +80,6 @@ impl Debug for UI {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         <UINode as Debug>::fmt(&self.root, f)
     }
-}
-
-impl UINode {
-    // pub fn element<U, F: FnOnce(&ElementObject) -> U>(&self, f: F) -> U {
-    // self.get(|ui_element| f(&ui_element.element))
-    // }
-    //
-    // pub fn layout_node<U, F: FnOnce(&LayoutNode) -> U>(&self, f: F) -> U {
-    // self.get(|ui_element| f(&ui_element.layout_node))
-    // }
-    //
-    // pub fn paint<U, F: FnOnce(&Paint) -> U>(&self, f: F) -> U {
-    // self.get(|ui_element| f(&ui_element.paint))
-    // }
-
-    // pub fn new(element: ElementObject) ->Self {
-    //
-    // }
 }
 
 impl From<(Stretch, ElementObject)> for StretchUINode {

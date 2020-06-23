@@ -1,61 +1,22 @@
-#[derive(Clone, Copy, Debug)]
-pub enum Color {
-    Black,
-    Blue,
-    Cyan,
-    Green,
-    LightBlack,
-    LightBlue,
-    LightCyan,
-    LightGreen,
-    LightMagenta,
-    LightRed,
-    LightWhite,
-    LightYellow,
-    Transparent,
-    Magenta,
-    Red,
-    Rgb,
-    Rgba,
-    White,
-    Yellow,
-}
+use super::{Color, ColorStyleInherited};
 
-impl Color {
-    pub fn default_foreground() -> Self {
-        Self::White
-    }
-
-    pub fn default_background() -> Self {
-        Self::Transparent
-    }
-}
-
-impl Default for Color {
-    fn default() -> Self {
-        Self::Transparent
-    }
-}
-
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, Default)]
 pub struct ColorStyle {
-    pub foreground: Color, // TODO inheritable
+    pub foreground: Option<Color>,
     pub background: Color,
     pub bold: Option<bool>,
     pub italic: Option<bool>,
     pub underline: Option<bool>,
-    pub border_color: Color,
 }
 
-impl Default for ColorStyle {
-    fn default() -> Self {
-        Self {
-            foreground: Color::default_foreground(),
-            background: Color::default_background(),
-            bold: Default::default(),
-            italic: Default::default(),
-            underline: Default::default(),
-            border_color: Color::default_background(),
+impl ColorStyle {
+    pub fn inherit(&self, inherited: ColorStyleInherited) -> ColorStyleInherited {
+        ColorStyleInherited {
+            foreground: self.foreground.unwrap_or(inherited.foreground),
+            background: self.background,
+            bold: self.bold.unwrap_or(inherited.bold),
+            italic: self.italic.unwrap_or(inherited.italic),
+            underline: self.underline.unwrap_or(inherited.underline),
         }
     }
 }

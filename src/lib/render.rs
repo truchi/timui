@@ -1,6 +1,6 @@
 use crate::component::{Element, ElementObject};
 use crate::style::{Defined, Size};
-use crate::ui::{UINode, UI};
+use crate::ui::UI;
 use termion::terminal_size;
 
 pub fn render<E: Element + 'static>(element: E) {

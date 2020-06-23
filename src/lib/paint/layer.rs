@@ -1,31 +1,31 @@
 use crate::style::Color;
 
 #[derive(Default)]
-pub struct Cell {
-    foreground: Color,
-    background: Color,
-    bold: Option<bool>,
-    italic: Option<bool>,
-    underline: Option<bool>,
-    c: char,
+pub struct Cell<T> {
+    pub foreground: Color,
+    pub background: Color,
+    pub bold: bool,
+    pub italic: bool,
+    pub underline: bool,
+    pub c: T,
 }
 
 #[derive(Default)]
 pub struct Surface {
-    x: usize,
-    y: usize,
-    width: usize,
-    height: usize,
-    vec: Vec<Cell>,
+    pub x: usize,
+    pub y: usize,
+    pub width: usize,
+    pub height: usize,
+    pub vec: Vec<Cell<char>>,
 }
 
 #[derive(Default)]
 pub struct Uniform {
-    x: usize,
-    y: usize,
-    width: usize,
-    height: usize,
-    cell: Cell,
+    pub x: usize,
+    pub y: usize,
+    pub width: usize,
+    pub height: usize,
+    pub cell: Cell<()>,
 }
 
 pub enum Layer {
