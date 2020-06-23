@@ -1,20 +1,42 @@
-use crate::component::{Size, Style};
+use crate::style::Color;
 
-#[derive(Default, Debug)]
+#[derive(Default)]
 pub struct Cell {
-    style: Style,
+    foreground: Color,
+    background: Color,
+    bold: Option<bool>,
+    italic: Option<bool>,
+    underline: Option<bool>,
     c: char,
 }
 
-#[derive(Default, Debug)]
-pub struct Layer {
-    area: Vec<Vec<Cell>>,
+#[derive(Default)]
+pub struct Surface {
+    x: usize,
+    y: usize,
+    width: usize,
+    height: usize,
+    vec: Vec<Cell>,
 }
 
-impl Layer {
-    pub fn with_capacity(Size { width, height }: Size<usize>) -> Self {
-        let area = Vec::with_capacity(width);
+#[derive(Default)]
+pub struct Uniform {
+    x: usize,
+    y: usize,
+    width: usize,
+    height: usize,
+    cell: Cell,
+}
 
-        Self { area }
+pub enum Layer {
+    Uniform(Uniform),
+    Surface(Surface),
+}
+
+impl Default for Layer {
+    fn default() -> Self {
+        Self::Uniform(Default::default())
     }
 }
+
+impl Layer {}

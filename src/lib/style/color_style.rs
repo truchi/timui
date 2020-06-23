@@ -16,6 +16,7 @@ pub enum Color {
     Magenta,
     Red,
     Rgb,
+    Rgba,
     White,
     Yellow,
 }
@@ -38,11 +39,12 @@ impl Default for Color {
 
 #[derive(Clone, Copy, Debug)]
 pub struct ColorStyle {
-    pub foreground: Color,
+    pub foreground: Color, // TODO inheritable
     pub background: Color,
     pub bold: Option<bool>,
     pub italic: Option<bool>,
     pub underline: Option<bool>,
+    pub border_color: Color,
 }
 
 impl Default for ColorStyle {
@@ -53,6 +55,7 @@ impl Default for ColorStyle {
             bold: Default::default(),
             italic: Default::default(),
             underline: Default::default(),
+            border_color: Color::default_background(),
         }
     }
 }

@@ -1,6 +1,8 @@
 use lib::component::{Component, Elements};
 use lib::render::render;
 use lib::style::{Percent, Style};
+use std::cell::RefCell;
+use std::rc::Rc;
 
 #[derive(Default, Debug)]
 pub struct Root;
@@ -19,6 +21,7 @@ impl Component for Root {
 
     fn children(&self, _props: &Self::Props) -> Elements {
         vec![
+            //
             Comp2.into(),
             // ().into(),
             // 'a'.into(),
@@ -36,7 +39,12 @@ impl Component for Comp2 {
     }
 
     fn children(&self, _props: &Self::Props) -> Elements {
-        vec![Comp3.into(), ().into(), 'a'.into()]
+        vec![
+            //
+            // Comp3.into(),
+            // ().into(),
+            // 'a'.into(),
+        ]
     }
 }
 

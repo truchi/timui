@@ -16,35 +16,43 @@ impl<T> Node<T> {
         })))
     }
 
-    pub fn get<U, F: FnOnce(&T) -> U>(&self, f: F) -> U {
-        f(&self.borrow().value)
+    pub fn get_value(&self) -> Ref<T> {
+        Ref::map(self.borrow(), |node| &node.value)
     }
 
-    pub fn get_mut<U, F: FnOnce(&mut T) -> U>(&self, f: F) -> U {
-        f(&mut self.borrow_mut().value)
-    }
-
-    pub fn set(&self, value: T) {
+    pub fn set_value(&self, value: T) {
         self.borrow_mut().value = value;
     }
 
-    pub fn map<F: FnOnce(&mut T) -> T>(&self, f: F) {
-        self.set(self.get_mut(f));
+    pub fn get_parent(&self) -> Ref<Parent<T>> {
+        Ref::map(self.borrow(), |node| &node.parent)
     }
 
     pub fn set_parent(&self, node: &Self) {
         self.borrow_mut().parent = node.as_parent();
     }
 
+    pub fn get_children(&self) -> Ref<Vec<Self>> {
+        Ref::map(self.borrow(), |node| &node.children)
+    }
+
     pub fn set_children(&self, children: Vec<Node<T>>) {
         self.borrow_mut().children = children;
     }
 
-    pub fn borrow(&self) -> Ref<Tree<T>> {
+    pub fn recurs<C>(&self, mut ctx: C, before: fn(C, &Self) -> C, after: fn(C, &Self) -> C) -> C {
+        ctx = before(ctx, self);
+        for child in self.borrow().children.iter() {
+            ctx = child.recurs(ctx, before, after);
+        }
+        after(ctx, self)
+    }
+
+    fn borrow(&self) -> Ref<Tree<T>> {
         self.0.borrow()
     }
 
-    pub fn borrow_mut(&self) -> RefMut<Tree<T>> {
+    fn borrow_mut(&self) -> RefMut<Tree<T>> {
         self.0.borrow_mut()
     }
 
@@ -57,5 +65,5 @@ impl<T> Node<T> {
 pub struct Tree<T> {
     value: T,
     parent: Parent<T>,
-    pub children: Vec<Node<T>>,
+    children: Vec<Node<T>>,
 }

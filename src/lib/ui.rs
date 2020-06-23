@@ -1,24 +1,30 @@
 use crate::component::ElementObject;
-use crate::layout::LayoutNode;
+use crate::paint::Paint;
+use crate::style::Style;
 use crate::style::{Number, Size};
 use crate::utils::tree::Node;
 use std::fmt::{Debug, Formatter, Result};
+use stretch::node::Node as Id;
+use stretch::node::Stretch;
 
-struct Wrap(ElementObject, LayoutNode);
-type UINode = Node<UIElement>;
+pub type UINode = Node<UIElement>;
+struct StretchUINode(Stretch, UINode);
 
 pub struct UIElement {
+    id: Id,
     element: ElementObject,
-    layout_node: LayoutNode,
+    style: Style,
+    paint: Paint,
 }
 
 impl UIElement {
-    pub fn new(element: ElementObject, layout_node: LayoutNode) -> Self {
-        Self {
-            element,
-            layout_node,
-        }
-    }
+    // pub fn new(element: ElementObject, layout_node: LayoutNode, paint: Paint) -> Self {
+    // Self {
+    // element,
+    // layout_node,
+    // paint,
+    // }
+    // }
 }
 
 impl Debug for UIElement {
@@ -28,20 +34,43 @@ impl Debug for UIElement {
 }
 
 pub struct UI {
-    pub root: UINode,
+    root: UINode,
+    stretch: Stretch,
 }
 
 impl UI {
     pub fn compute_layout(&self, size: Size<Number>) {
-        self.root.layout_node(|x| x.compute_layout(size));
+        // self.root.layout_node(|x| x.compute_layout(size));
+    }
+
+    pub fn render(&self, size: Size<Number>) {
+        self.compute_layout(size);
+
+        fn before(i: usize, node: &UINode) -> usize {
+            println!("I: {}", i);
+            // println!("I: {}, BEFORE {:#?}", i, node.element(|x| x.style()));
+            ();
+            // let style = node.element(|x| x.style());
+            // let layout = node.layout_node(|x| x.layout());
+            // node.get_mut(|ui_element| ui_element.paint = Paint::new(layout, style));
+            i + 1
+        }
+
+        fn after(i: usize, node: &UINode) -> usize {
+            println!("I: {}", i);
+            // println!("I: {}, AFTER {:#?}", i, node.element(|x| x.style()));
+            i - 1
+        }
+
+        self.root.recurs(0, before, after);
     }
 }
 
 impl From<ElementObject> for UI {
     fn from(element: ElementObject) -> Self {
-        let root: UINode = Wrap(element, LayoutNode::new()).into();
+        let StretchUINode(stretch, root) = (Stretch::new(), element).into();
 
-        Self { root }
+        Self { root, stretch }
     }
 }
 
@@ -52,36 +81,52 @@ impl Debug for UI {
 }
 
 impl UINode {
-    pub fn element<U, F: FnOnce(&ElementObject) -> U>(&self, f: F) -> U {
-        self.get(|ui_element| f(&ui_element.element))
-    }
+    // pub fn element<U, F: FnOnce(&ElementObject) -> U>(&self, f: F) -> U {
+    // self.get(|ui_element| f(&ui_element.element))
+    // }
+    //
+    // pub fn layout_node<U, F: FnOnce(&LayoutNode) -> U>(&self, f: F) -> U {
+    // self.get(|ui_element| f(&ui_element.layout_node))
+    // }
+    //
+    // pub fn paint<U, F: FnOnce(&Paint) -> U>(&self, f: F) -> U {
+    // self.get(|ui_element| f(&ui_element.paint))
+    // }
 
-    pub fn layout_node<U, F: FnOnce(&LayoutNode) -> U>(&self, f: F) -> U {
-        self.get(|ui_element| f(&ui_element.layout_node))
-    }
+    // pub fn new(element: ElementObject) ->Self {
+    //
+    // }
 }
 
-impl From<Wrap> for UINode {
-    fn from(Wrap(element, layout_node): Wrap) -> Self {
+impl From<(Stretch, ElementObject)> for StretchUINode {
+    fn from((mut stretch, element): (Stretch, ElementObject)) -> Self {
         let style = element.style();
         let elements = element.children();
-        let node = Self::new(UIElement::new(element, layout_node));
-        node.layout_node(|x| x.set_style(style.layout));
+        let id = stretch.new_node(style.layout, Default::default()).unwrap();
+        let node = UINode::new(UIElement {
+            id,
+            element,
+            style,
+            paint: Default::default(),
+        });
 
         let len = elements.len();
-        let mut children = Vec::with_capacity(len);
-        let mut layout_children = Vec::with_capacity(len);
-        for element in elements {
-            let child: UINode = Wrap(element, node.layout_node(LayoutNode::new_child)).into();
-            child.set_parent(&node);
+        let (mut stretch, children, children_ids) = elements.into_iter().fold(
+            (stretch, Vec::with_capacity(len), Vec::with_capacity(len)),
+            |(stretch, mut children, mut children_ids), element| {
+                let Self(stretch, child) = (stretch, element).into();
 
-            layout_children.push(child.layout_node(LayoutNode::id));
-            children.push(child);
-        }
+                child.set_parent(&node);
+                children_ids.push(child.get_value().id);
+                children.push(child);
+
+                (stretch, children, children_ids)
+            },
+        );
 
         node.set_children(children);
-        node.layout_node(|x| x.set_children(layout_children));
+        stretch.set_children(id, children_ids).unwrap();
 
-        node
+        Self(stretch, node)
     }
 }

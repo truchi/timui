@@ -1,3 +1,5 @@
-// mod layer;
-//
-// pub use layer::*;
+mod layer;
+mod paint;
+
+pub use layer::*;
+pub use paint::*;
