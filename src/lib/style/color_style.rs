@@ -6,7 +6,7 @@ pub struct ColorStyle {
     pub background: Color,
     pub bold: Option<bool>,
     pub italic: Option<bool>,
-    pub underline: Option<bool>,
+    pub underline: bool,
 }
 
 impl ColorStyle {
@@ -16,7 +16,7 @@ impl ColorStyle {
             background: self.background,
             bold: self.bold.unwrap_or(inherited.bold),
             italic: self.italic.unwrap_or(inherited.italic),
-            underline: self.underline.unwrap_or(inherited.underline),
+            underline: self.underline,
         }
     }
 }

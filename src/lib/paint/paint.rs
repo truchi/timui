@@ -1,29 +1,45 @@
-use super::{Cell, Layer, Uniform};
+use super::{Canvas, Cell, Uniform};
 use crate::style::ColorStyleInherited;
 use stretch::result::Layout;
 
 // #[derive(Default)]
 // pub struct Borders {
-// border_start: Layer,
-// border_end: Layer,
-// border_top: Layer,
-// border_bottom: Layer,
-// border_start_top: Layer,
-// border_start_bottom: Layer,
-// border_end_top: Layer,
-// border_end_bottom: Layer,
+// start: Layer,
+// end: Layer,
+// top: Layer,
+// bottom: Layer,
+// start_top: Layer,
+// start_bottom: Layer,
+// end_top: Layer,
+// end_bottom: Layer,
 // }
 
 #[derive(Default)]
 pub struct Paint {
-    background: Layer,
+    background: Uniform,
     // borders: Borders,
+}
+
+impl Paint {
+    pub fn above(&self, canvas: &mut Canvas) {
+        canvas.below(&self.background);
+    }
+
+    pub fn below(&self, canvas: &mut Canvas) {
+        println!("CANVAS x {:#?}", canvas.x);
+        println!("CANVAS y {:#?}", canvas.y);
+        println!("CANVAS width {:#?}", canvas.width);
+        println!("CANVAS height {:#?}", canvas.height);
+        println!("CANVAS vec[0] {:#?}", canvas.vec[0]);
+        println!("BACKGROUND {:#?}", self.background);
+        canvas.above(&self.background);
+    }
 }
 
 impl From<(Layout, ColorStyleInherited)> for Paint {
     fn from((layout, style): (Layout, ColorStyleInherited)) -> Self {
         Self {
-            background: Layer::Uniform(Uniform {
+            background: Uniform {
                 x: layout.location.x as usize,
                 y: layout.location.y as usize,
                 width: layout.size.width as usize,
@@ -34,9 +50,9 @@ impl From<(Layout, ColorStyleInherited)> for Paint {
                     bold: style.bold,
                     italic: style.italic,
                     underline: style.underline,
-                    c: (),
+                    c: ' ',
                 },
-            }),
+            },
         }
     }
 }

@@ -1,6 +1,6 @@
 use lib::component::{Component, Elements};
 use lib::render::render;
-use lib::style::{Percent, Style};
+use lib::style::{Color, Percent, Style};
 
 #[derive(Default, Debug)]
 pub struct Root;
@@ -14,15 +14,16 @@ impl Component for Root {
         Style::new()
             .width(Percent(1.0))
             .height(Percent(1.0))
+            .background(Color::White)
             .justify_center()
     }
 
     fn children(&self, _props: &Self::Props) -> Elements {
         vec![
             //
-            Comp2.into(),
-            ().into(),
-            'a'.into(),
+            // Comp2.into(),
+            // ().into(),
+            // 'a'.into(),
         ]
     }
 }

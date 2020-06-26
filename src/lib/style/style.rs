@@ -480,17 +480,12 @@ impl Style {
     // UNDERLINE
 
     pub fn underline(mut self) -> Self {
-        self.color.underline = Some(true);
+        self.color.underline = true;
         self
     }
 
     pub fn no_underline(mut self) -> Self {
-        self.color.underline = Some(false);
-        self
-    }
-
-    pub fn inherit_underline(mut self) -> Self {
-        self.color.underline = None;
+        self.color.underline = false;
         self
     }
 }

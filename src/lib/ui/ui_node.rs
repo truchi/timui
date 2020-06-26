@@ -1,5 +1,6 @@
 use super::UIElement;
 use crate::component::ElementObject;
+use crate::paint::Canvas;
 use crate::paint::Paint;
 use crate::style::ColorStyleInherited;
 use crate::utils::tree::Node;
@@ -11,6 +12,7 @@ pub struct StretchUINode(pub Stretch, pub UINode);
 pub struct Context<'ui> {
     pub stretch: &'ui mut Stretch,
     pub inherited: ColorStyleInherited,
+    pub canvas: Canvas,
 }
 
 impl UINode {
@@ -26,8 +28,10 @@ impl UINode {
         ctx
     }
 
-    pub fn after<'ui>(&self, ctx: Context<'ui>) -> Context<'ui> {
+    pub fn after<'ui>(&self, mut ctx: Context<'ui>) -> Context<'ui> {
         println!("after");
+        self.get_value().paint.below(&mut ctx.canvas);
+
         ctx
     }
 }
