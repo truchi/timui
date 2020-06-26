@@ -1,7 +1,6 @@
 use super::UIElement;
 use crate::component::ElementObject;
 use crate::paint::Canvas;
-use crate::paint::Paint;
 use crate::style::ColorStyleInherited;
 use crate::utils::tree::Node;
 use std::cell::Ref;

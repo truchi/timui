@@ -1,6 +1,7 @@
 use super::{Cell, Layer};
-use crate::style::Color;
+use crate::style::{Color, ColorStyleInherited};
 use std::fmt::{Display, Error, Formatter};
+use stretch::result::Layout;
 
 #[derive(Default, Debug)]
 pub struct Canvas {
@@ -81,9 +82,19 @@ impl Canvas {
             }
         }
     }
+}
 
-    pub fn fold<T, F: FnMut(T, &Cell) -> T>(&self, acc: T, f: F) -> T {
-        self.vec.iter().fold(acc, f)
+impl From<(Layout, ColorStyleInherited, char)> for Canvas {
+    fn from((layout, mut style, c): (Layout, ColorStyleInherited, char)) -> Self {
+        style.background = Color::Transparent;
+
+        Self {
+            x: layout.location.x as usize,
+            y: layout.location.y as usize,
+            width: 1,
+            height: 1,
+            vec: vec![(style, c).into()],
+        }
     }
 }
 

@@ -1,4 +1,4 @@
-use lib::component::{Component, Elements};
+use lib::component::{Component, ElementObject, Elements};
 use lib::render::render;
 use lib::style::{Color, Percent, Points, Style};
 
@@ -16,6 +16,7 @@ impl Component for Root {
             .height(Percent(1.0))
             .background(Color::Blue)
             .justify_around()
+        // .none() // no effect ???
     }
 
     fn children(&self, _props: &Self::Props) -> Elements {
@@ -59,15 +60,18 @@ impl Component for Comp3 {
 
     fn style(&self, _props: &Self::Props) -> Style {
         Style::new()
-            .width(Points(1.0))
-            .height(Points(1.0))
+            .width(Percent(0.4))
+            .height(Percent(0.5))
+            .bold()
+            .underline()
+            .italic()
             .background(Color::Red)
     }
 
-    fn children(&self, _props: &Self::Props) -> Elements {
+    fn children(&self, props: &Self::Props) -> Elements {
         vec![
             //
-            // <ElementObject as From<char>>::from(*props),
+            <ElementObject as From<char>>::from(*props),
         ]
     }
 }

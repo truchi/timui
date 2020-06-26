@@ -1,4 +1,5 @@
 use super::{Canvas, Cell, Uniform};
+use crate::component::Content;
 use crate::style::ColorStyleInherited;
 use stretch::result::Layout;
 
@@ -17,36 +18,35 @@ use stretch::result::Layout;
 #[derive(Default)]
 pub struct Paint {
     background: Uniform,
+    content: Canvas,
     // borders: Borders,
 }
 
 impl Paint {
     pub fn above(&self, canvas: &mut Canvas) {
         canvas.above(&self.background);
+        canvas.above(&self.content);
     }
 
     pub fn below(&self, canvas: &mut Canvas) {
         canvas.below(&self.background);
+        canvas.below(&self.content);
     }
 }
 
-impl From<(Layout, ColorStyleInherited)> for Paint {
-    fn from((layout, style): (Layout, ColorStyleInherited)) -> Self {
+impl From<(Layout, ColorStyleInherited, Content)> for Paint {
+    fn from((layout, style, content): (Layout, ColorStyleInherited, Content)) -> Self {
+        let content = match content {
+            Content::None => Default::default(),
+            Content::Char(c) => (layout, style, c).into(),
+            _ => Default::default(),
+        };
+
+        let background = (layout, style, ' ').into();
+
         Self {
-            background: Uniform {
-                x: layout.location.x as usize,
-                y: layout.location.y as usize,
-                width: layout.size.width as usize,
-                height: layout.size.height as usize,
-                cell: Cell {
-                    foreground: style.foreground,
-                    background: style.background,
-                    bold: style.bold,
-                    italic: style.italic,
-                    underline: style.underline,
-                    c: ' ',
-                },
-            },
+            content,
+            background,
         }
     }
 }

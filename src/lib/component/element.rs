@@ -1,9 +1,16 @@
 use super::Component;
-use crate::style::{Points, Style};
+use crate::style::{Percent, Style};
 use std::fmt::Debug;
+use std::rc::Rc;
 
 pub type ElementObject = Box<dyn Element>;
 pub type Elements = Vec<ElementObject>;
+
+pub enum Content {
+    Char(char),
+    String(Rc<String>),
+    None,
+}
 
 pub trait Element: Debug {
     fn style(&self) -> Style {
@@ -13,17 +20,37 @@ pub trait Element: Debug {
     fn children(&self) -> Elements {
         Default::default()
     }
-}
 
-impl Element for () {}
-
-impl Element for char {
-    fn style(&self) -> Style {
-        Style::new().width(Points(1.0)).height(Points(1.0))
+    fn content(&self) -> Content {
+        Content::None
     }
 }
 
-impl Element for String {}
+impl Element for () {
+    fn style(&self) -> Style {
+        Style::new().none()
+    }
+}
+
+impl Element for char {
+    fn style(&self) -> Style {
+        Style::new().width(Percent(1.0)).height(Percent(1.0))
+    }
+
+    fn content(&self) -> Content {
+        Content::Char(*self)
+    }
+}
+
+impl Element for Rc<String> {
+    fn style(&self) -> Style {
+        Style::new().width(Percent(1.0)).height(Percent(1.0))
+    }
+
+    fn content(&self) -> Content {
+        Content::String(Rc::clone(self))
+    }
+}
 
 impl<C: Component> Element for C
 where

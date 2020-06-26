@@ -2,7 +2,6 @@ use crate::component::ElementObject;
 use crate::paint::Paint;
 use crate::style::{ColorStyleInherited, LayoutStyle};
 use std::fmt::{Debug, Formatter, Result};
-use std::rc::Weak;
 use stretch::node::Node as Id;
 use stretch::node::Stretch;
 use stretch::result::Layout;
@@ -29,7 +28,11 @@ impl UIElement {
     }
 
     pub fn paint(&mut self) {
-        self.paint = Some((self.layout.unwrap(), self.color_style).into());
+        let layout = self.layout.unwrap();
+        let style = self.color_style;
+        let content = self.element.content();
+
+        self.paint = Some((layout, style, content).into());
     }
 }
 

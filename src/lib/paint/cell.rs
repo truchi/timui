@@ -1,4 +1,4 @@
-use crate::style::Color;
+use crate::style::{Color, ColorStyleInherited};
 use std::fmt::{Display, Error, Formatter};
 
 #[derive(Copy, Clone, Default, Debug)]
@@ -13,6 +13,7 @@ pub struct Cell {
 
 impl Cell {
     pub fn with_background(background: Color) -> Self {
+        // TODO From<Color>?
         Self {
             foreground: Color::Transparent,
             background,
@@ -43,6 +44,19 @@ impl Cell {
 
     pub fn below(&self, below: &Self) -> Self {
         below.above(self)
+    }
+}
+
+impl From<(ColorStyleInherited, char)> for Cell {
+    fn from((style, c): (ColorStyleInherited, char)) -> Self {
+        Self {
+            foreground: style.foreground,
+            background: style.background,
+            bold: style.bold,
+            italic: style.italic,
+            underline: style.underline,
+            c,
+        }
     }
 }
 

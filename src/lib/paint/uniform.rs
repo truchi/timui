@@ -1,4 +1,6 @@
 use super::{Cell, Layer};
+use crate::style::ColorStyleInherited;
+use stretch::result::Layout;
 
 #[derive(Default, Debug)]
 pub struct Uniform {
@@ -32,5 +34,17 @@ impl Layer for Uniform {
 
     fn get_mut(&mut self, _: usize, _: usize) -> &mut Cell {
         &mut self.cell
+    }
+}
+
+impl From<(Layout, ColorStyleInherited, char)> for Uniform {
+    fn from((layout, style, c): (Layout, ColorStyleInherited, char)) -> Self {
+        Self {
+            x: layout.location.x as usize,
+            y: layout.location.y as usize,
+            width: layout.size.width as usize,
+            height: layout.size.height as usize,
+            cell: (style, c).into(),
+        }
     }
 }
