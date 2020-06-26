@@ -14,7 +14,6 @@ impl Component for Root {
         Style::new()
             .width(Percent(1.0))
             .height(Percent(1.0))
-            .foreground(Color::Red)
             .background(Color::Blue)
             .justify_around()
     }
@@ -36,14 +35,16 @@ impl Component for Comp2 {
 
     fn style(&self, _props: &Self::Props) -> Style {
         Style::new()
-            .width(Percent(0.25))
+            .width(Percent(0.1))
             .height(Percent(1.0))
-            .background(Color::Black)
+            .background(Color::Magenta)
+            .justify_around()
     }
 
     fn children(&self, props: &Self::Props) -> Elements {
         vec![
             //
+            (Comp3, *props).into(),
             (Comp3, *props).into(),
             // ().into(),
             // 'a'.into(),
@@ -57,11 +58,17 @@ impl Component for Comp3 {
     type Props = char;
 
     fn style(&self, props: &Self::Props) -> Style {
-        Style::new().width(Points(1.0)).height(Percent(1.0))
+        Style::new()
+            .width(Points(1.0))
+            .height(Points(1.0))
+            .background(Color::Red)
     }
 
     fn children(&self, props: &Self::Props) -> Elements {
-        vec![<ElementObject as From<char>>::from(*props)]
+        vec![
+            //
+            // <ElementObject as From<char>>::from(*props),
+        ]
     }
 }
 
