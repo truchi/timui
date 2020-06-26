@@ -26,12 +26,6 @@ impl Paint {
     }
 
     pub fn below(&self, canvas: &mut Canvas) {
-        // println!("CANVAS x {:#?}", canvas.x);
-        // println!("CANVAS y {:#?}", canvas.y);
-        // println!("CANVAS width {:#?}", canvas.width);
-        // println!("CANVAS height {:#?}", canvas.height);
-        // println!("CANVAS vec[0] {:#?}", canvas.vec[0]);
-        // println!("BACKGROUND {:#?}", self.background);
         canvas.below(&self.background);
     }
 }

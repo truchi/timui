@@ -55,7 +55,6 @@ impl Canvas {
     }
 
     pub fn above(&mut self, above: &impl Layer) {
-        println!("ABOVE");
         let (x, y, w, h) = self.intersect(above);
         let dx = x - self.x;
         let dy = y - self.y;
@@ -72,22 +71,12 @@ impl Canvas {
         let (x, y, w, h) = self.intersect(below);
         let dx = x - self.x;
         let dy = y - self.y;
-        println!("BELOW");
-        println!("x {}", x);
-        println!("y {}", y);
-        println!("w {}", w);
-        println!("h {}", h);
-        println!("dx {}", dx);
-        println!("dy {}", dy);
 
         for i in 0..w {
             for j in 0..h {
                 let cell = self.get_mut(i + dx, j + dy);
                 let above = below.get(i, j);
                 let merged = cell.below(&above);
-                println!("SELF      bg {:#?}", cell.background);
-                println!("ABOVE     bg {:#?}", above.background);
-                println!("-> MERGED bg -> {:#?}", merged.background);
                 *cell = merged;
             }
         }

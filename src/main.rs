@@ -57,14 +57,14 @@ pub struct Comp3;
 impl Component for Comp3 {
     type Props = char;
 
-    fn style(&self, props: &Self::Props) -> Style {
+    fn style(&self, _props: &Self::Props) -> Style {
         Style::new()
             .width(Points(1.0))
             .height(Points(1.0))
             .background(Color::Red)
     }
 
-    fn children(&self, props: &Self::Props) -> Elements {
+    fn children(&self, _props: &Self::Props) -> Elements {
         vec![
             //
             // <ElementObject as From<char>>::from(*props),
@@ -73,13 +73,7 @@ impl Component for Comp3 {
 }
 
 fn main() {
-    // println!(
-    // "{}{}{}",
-    // termion::color::Bg(termion::color::Reset),
-    // termion::color::Fg(termion::color::Reset),
-    // termion::style::Reset
-    // );
-    // println!("{}", "💖💖💖");
-    // println!("{}", "🎁🎁🎁");
     render((Root, (12, 12)));
+    println!("{}", "💖💖💖");
+    println!("{}", "🎁🎁🎁");
 }

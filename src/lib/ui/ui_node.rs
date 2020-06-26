@@ -17,8 +17,6 @@ pub struct Context<'ui> {
 
 impl UINode {
     pub fn before<'ui>(&self, ctx: Context<'ui>) -> Context<'ui> {
-        println!("before");
-
         let mut element = self.get_value_mut();
         let layout = *ctx.stretch.layout(element.id).unwrap();
         let paint = Paint::from((layout, element.color_style));
@@ -29,7 +27,6 @@ impl UINode {
     }
 
     pub fn after<'ui>(&self, mut ctx: Context<'ui>) -> Context<'ui> {
-        println!("after");
         Ref::map(self.get_value(), |element| {
             if let Some(paint) = &element.paint {
                 paint.below(&mut ctx.canvas);

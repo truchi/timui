@@ -32,20 +32,7 @@ impl UI {
         };
 
         let ctx = self.root.recurs(ctx, UINode::before, UINode::after);
-
-        // println!("====");
-        // println!("DONE");
-        // println!("====");
-        // println!("CANVAS x {:#?}", ctx.canvas.x);
-        // println!("CANVAS y {:#?}", ctx.canvas.y);
-        // println!("CANVAS width {:#?}", ctx.canvas.width);
-        // println!("CANVAS height {:#?}", ctx.canvas.height);
-        // println!("CANVAS vec[0] {:#?}", ctx.canvas.vec[0]);
-        println!("{}", termion::clear::All);
-        println!("{}", ctx.canvas);
-        for cell in ctx.canvas.vec.iter() {
-            // println!("{:#?}", cell.background);
-        }
+        // println!("{}{}", termion::clear::All, ctx.canvas);
     }
 }
 
@@ -60,17 +47,5 @@ impl From<ElementObject> for UI {
 impl Debug for UI {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         <UINode as Debug>::fmt(&self.root, f)
-    }
-}
-
-impl Drop for UI {
-    fn drop(&mut self) {
-        // println!(
-        // "{}{}{}",
-        // termion::color::Bg(termion::color::Reset),
-        // termion::color::Fg(termion::color::Reset),
-        // termion::style::Reset
-        // );
-        // println!("DROPPED!")
     }
 }
