@@ -87,9 +87,8 @@ impl Canvas {
 
 impl Display for Canvas {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
-        for cell in self.vec.iter() {
+        Ok(for cell in self.vec.iter() {
             cell.fmt(f).unwrap();
-        }
-        Ok(())
+        })
     }
 }

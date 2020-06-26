@@ -22,17 +22,17 @@ pub struct Paint {
 
 impl Paint {
     pub fn above(&self, canvas: &mut Canvas) {
-        canvas.below(&self.background);
+        canvas.above(&self.background);
     }
 
     pub fn below(&self, canvas: &mut Canvas) {
-        println!("CANVAS x {:#?}", canvas.x);
-        println!("CANVAS y {:#?}", canvas.y);
-        println!("CANVAS width {:#?}", canvas.width);
-        println!("CANVAS height {:#?}", canvas.height);
-        println!("CANVAS vec[0] {:#?}", canvas.vec[0]);
-        println!("BACKGROUND {:#?}", self.background);
-        canvas.above(&self.background);
+        // println!("CANVAS x {:#?}", canvas.x);
+        // println!("CANVAS y {:#?}", canvas.y);
+        // println!("CANVAS width {:#?}", canvas.width);
+        // println!("CANVAS height {:#?}", canvas.height);
+        // println!("CANVAS vec[0] {:#?}", canvas.vec[0]);
+        // println!("BACKGROUND {:#?}", self.background);
+        canvas.below(&self.background);
     }
 }
 

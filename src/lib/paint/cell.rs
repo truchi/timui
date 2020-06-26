@@ -51,7 +51,12 @@ impl Display for Cell {
         use termion::style;
 
         let foreground = self.foreground.fg_str();
-        let background = self.background.bg_str();
+        let background = if self.background == Color::Transparent {
+            Color::Black
+        } else {
+            self.background
+        }
+        .bg_str();
         let bold = if self.bold {
             <style::Bold as AsRef<str>>::as_ref(&style::Bold)
         } else {
@@ -67,7 +72,11 @@ impl Display for Cell {
         } else {
             <style::NoUnderline as AsRef<str>>::as_ref(&style::NoUnderline)
         };
-        let c = self.c;
+        let c = if self.foreground == Color::Transparent {
+            ' '
+        } else {
+            self.c
+        };
 
         write!(
             f,

@@ -12,8 +12,8 @@ pub struct ColorStyleInherited {
 impl Default for ColorStyleInherited {
     fn default() -> Self {
         Self {
-            foreground: Color::Black,
-            background: Color::White,
+            foreground: Color::White,
+            background: Color::Black,
             bold: false,
             italic: false,
             underline: false,
