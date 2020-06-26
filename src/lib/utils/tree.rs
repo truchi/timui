@@ -28,8 +28,8 @@ impl<T> Node<T> {
         self.borrow_mut().value = value;
     }
 
-    pub fn get_parent(&self) -> Ref<Parent<T>> {
-        Ref::map(self.borrow(), |node| &node.parent)
+    pub fn get_parent(&self) -> Option<Self> {
+        Weak::upgrade(&self.borrow().parent).map(|parent| Self(parent))
     }
 
     pub fn set_parent(&self, node: &Self) {

@@ -16,17 +16,19 @@ pub struct Context<'ui> {
 }
 
 impl UINode {
-    pub fn before<'ui>(&self, ctx: Context<'ui>) -> Context<'ui> {
+    pub fn render_before<'ui>(&self, ctx: Context<'ui>) -> Context<'ui> {
+        let parent_layout = self
+            .get_parent()
+            .map(|parent| parent.get_value().layout.unwrap());
         let mut element = self.get_value_mut();
-        let layout = *ctx.stretch.layout(element.id).unwrap();
-        let paint = Paint::from((layout, element.color_style));
-        element.layout = Some(layout);
-        element.paint = Some(paint);
+
+        element.layout(ctx.stretch, parent_layout);
+        element.paint();
 
         ctx
     }
 
-    pub fn after<'ui>(&self, mut ctx: Context<'ui>) -> Context<'ui> {
+    pub fn render_after<'ui>(&self, mut ctx: Context<'ui>) -> Context<'ui> {
         Ref::map(self.get_value(), |element| {
             if let Some(paint) = &element.paint {
                 paint.below(&mut ctx.canvas);

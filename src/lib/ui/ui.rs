@@ -31,8 +31,11 @@ impl UI {
             canvas: Canvas::with_background(0, 0, width, height, Color::Transparent),
         };
 
-        let ctx = self.root.recurs(ctx, UINode::before, UINode::after);
-        // println!("{}{}", termion::clear::All, ctx.canvas);
+        let ctx = self
+            .root
+            .recurs(ctx, UINode::render_before, UINode::render_after);
+
+        println!("{}{}", termion::clear::All, ctx.canvas);
     }
 }
 
