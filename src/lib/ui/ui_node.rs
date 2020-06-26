@@ -4,6 +4,7 @@ use crate::paint::Canvas;
 use crate::paint::Paint;
 use crate::style::ColorStyleInherited;
 use crate::utils::tree::Node;
+use std::cell::Ref;
 use stretch::node::Stretch;
 
 pub type UINode = Node<UIElement>;
@@ -11,48 +12,60 @@ pub struct StretchUINode(pub Stretch, pub UINode);
 
 pub struct Context<'ui> {
     pub stretch: &'ui mut Stretch,
-    pub inherited: ColorStyleInherited,
     pub canvas: Canvas,
 }
 
 impl UINode {
-    pub fn before<'ui>(&self, mut ctx: Context<'ui>) -> Context<'ui> {
+    pub fn before<'ui>(&self, ctx: Context<'ui>) -> Context<'ui> {
         println!("before");
 
         let mut element = self.get_value_mut();
-        let layout = ctx.stretch.layout(element.id).unwrap();
-        let inherited = element.style.color.inherit(ctx.inherited);
-        element.paint = Paint::from((*layout, inherited));
-        ctx.inherited = inherited;
+        let layout = *ctx.stretch.layout(element.id).unwrap();
+        let paint = Paint::from((layout, element.color_style));
+        element.layout = Some(layout);
+        element.paint = Some(paint);
 
         ctx
     }
 
     pub fn after<'ui>(&self, mut ctx: Context<'ui>) -> Context<'ui> {
         println!("after");
-        self.get_value().paint.below(&mut ctx.canvas);
+        Ref::map(self.get_value(), |element| {
+            if let Some(paint) = &element.paint {
+                paint.below(&mut ctx.canvas);
+            }
+            &()
+        });
 
         ctx
     }
 }
 
-impl From<(Stretch, ElementObject)> for StretchUINode {
-    fn from((mut stretch, element): (Stretch, ElementObject)) -> Self {
+impl From<(Stretch, ColorStyleInherited, ElementObject)> for StretchUINode {
+    fn from(
+        (mut stretch, inherited, element): (Stretch, ColorStyleInherited, ElementObject),
+    ) -> Self {
         let style = element.style();
         let elements = element.children();
-        let id = stretch.new_node(style.layout, Default::default()).unwrap();
+        let layout_style = style.layout;
+        let color_style = style.color.inherit(inherited);
+        let id = stretch.new_node(layout_style, Default::default()).unwrap();
+        let layout = None;
+        let paint = None;
         let node = UINode::new(UIElement {
             id,
             element,
-            style,
-            paint: Default::default(),
+            layout,
+            layout_style,
+            color_style,
+            paint,
         });
 
         let len = elements.len();
         let (mut stretch, children, children_ids) = elements.into_iter().fold(
             (stretch, Vec::with_capacity(len), Vec::with_capacity(len)),
             |(stretch, mut children, mut children_ids), element| {
-                let Self(stretch, child) = (stretch, element).into();
+                let Self(stretch, child) = (stretch, color_style, element).into();
 
                 child.set_parent(&node);
                 children_ids.push(child.get_value().id);

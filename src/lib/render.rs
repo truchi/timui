@@ -1,5 +1,4 @@
 use crate::component::{Element, ElementObject};
-use crate::style::{Defined, Size};
 use crate::ui::UI;
 use termion::terminal_size;
 

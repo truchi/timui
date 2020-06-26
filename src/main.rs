@@ -1,4 +1,4 @@
-use lib::component::{Component, ElementObject, Elements};
+use lib::component::{Component, Elements};
 use lib::render::render;
 use lib::style::{Color, Percent, Points, Style};
 

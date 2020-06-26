@@ -28,7 +28,6 @@ impl UI {
 
         let ctx = Context {
             stretch: &mut self.stretch,
-            inherited: Default::default(),
             canvas: Canvas::with_background(0, 0, width, height, Color::Transparent),
         };
 
@@ -52,7 +51,7 @@ impl UI {
 
 impl From<ElementObject> for UI {
     fn from(element: ElementObject) -> Self {
-        let StretchUINode(stretch, root) = (Stretch::new(), element).into();
+        let StretchUINode(stretch, root) = (Stretch::new(), Default::default(), element).into();
 
         Self { root, stretch }
     }
