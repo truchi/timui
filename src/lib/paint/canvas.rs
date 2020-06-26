@@ -29,11 +29,11 @@ impl Layer for Canvas {
     }
 
     fn get(&self, x: usize, y: usize) -> &Cell {
-        self.vec.get(x * y).unwrap()
+        self.vec.get(self.width * y + x).unwrap()
     }
 
     fn get_mut(&mut self, x: usize, y: usize) -> &mut Cell {
-        self.vec.get_mut(x * y).unwrap()
+        self.vec.get_mut(self.width * y + x).unwrap()
     }
 }
 
@@ -55,6 +55,7 @@ impl Canvas {
     }
 
     pub fn above(&mut self, above: &impl Layer) {
+        println!("ABOVE");
         let (x, y, w, h) = self.intersect(above);
         let dx = x - self.x;
         let dy = y - self.y;
@@ -71,11 +72,23 @@ impl Canvas {
         let (x, y, w, h) = self.intersect(below);
         let dx = x - self.x;
         let dy = y - self.y;
+        println!("BELOW");
+        println!("x {}", x);
+        println!("y {}", y);
+        println!("w {}", w);
+        println!("h {}", h);
+        println!("dx {}", dx);
+        println!("dy {}", dy);
 
         for i in 0..w {
             for j in 0..h {
                 let cell = self.get_mut(i + dx, j + dy);
-                *cell = cell.below(&below.get(i, j));
+                let above = below.get(i, j);
+                let merged = cell.below(&above);
+                println!("SELF      bg {:#?}", cell.background);
+                println!("ABOVE     bg {:#?}", above.background);
+                println!("-> MERGED bg -> {:#?}", merged.background);
+                *cell = merged;
             }
         }
     }

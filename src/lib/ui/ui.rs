@@ -44,6 +44,9 @@ impl UI {
         // println!("CANVAS vec[0] {:#?}", ctx.canvas.vec[0]);
         println!("{}", termion::clear::All);
         println!("{}", ctx.canvas);
+        for cell in ctx.canvas.vec.iter() {
+            // println!("{:#?}", cell.background);
+        }
     }
 }
 
@@ -69,6 +72,6 @@ impl Drop for UI {
         // termion::color::Fg(termion::color::Reset),
         // termion::style::Reset
         // );
-        println!("DROPPED!")
+        // println!("DROPPED!")
     }
 }

@@ -14,15 +14,15 @@ impl Component for Root {
         Style::new()
             .width(Percent(1.0))
             .height(Percent(1.0))
-            // .foreground(Color::Red)
+            .foreground(Color::Red)
             .background(Color::Blue)
-            .justify_center()
+            .justify_around()
     }
 
     fn children(&self, _props: &Self::Props) -> Elements {
         vec![
-            // (Comp2, 'a').into(),
-            // (Comp2, 'b').into(),
+            (Comp2, 'a').into(),
+            (Comp2, 'b').into(),
             // ().into(),
             // 'a'.into(),
         ]
@@ -35,7 +35,10 @@ impl Component for Comp2 {
     type Props = char;
 
     fn style(&self, _props: &Self::Props) -> Style {
-        Style::new().width(Percent(0.25)).height(Percent(1.0))
+        Style::new()
+            .width(Percent(0.25))
+            .height(Percent(1.0))
+            .background(Color::Black)
     }
 
     fn children(&self, props: &Self::Props) -> Elements {
