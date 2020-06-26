@@ -13,7 +13,3 @@ pub trait Component: Debug {
         Default::default()
     }
 }
-
-impl Component for () {
-    type Props = ();
-}

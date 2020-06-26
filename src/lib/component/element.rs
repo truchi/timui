@@ -15,6 +15,8 @@ pub trait Element: Debug {
     }
 }
 
+impl Element for () {}
+
 impl Element for char {
     fn style(&self) -> Style {
         Style::new().width(Points(1.0)).height(Points(1.0))

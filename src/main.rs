@@ -74,6 +74,6 @@ impl Component for Comp3 {
 
 fn main() {
     render((Root, (12, 12)));
-    println!("{}", "💖💖💖");
-    println!("{}", "🎁🎁🎁");
+    // println!("{}", "💖💖💖");
+    // println!("{}", "🎁🎁🎁");
 }
