@@ -46,7 +46,7 @@ impl<T> Node<T> {
 
     pub fn recurs<C>(&self, mut ctx: C, before: fn(&Self, C) -> C, after: fn(&Self, C) -> C) -> C {
         ctx = before(self, ctx);
-        for child in self.borrow().children.iter() {
+        for child in self.borrow().children.iter().rev() {
             ctx = child.recurs(ctx, before, after);
         }
         after(self, ctx)

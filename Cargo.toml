@@ -11,3 +11,4 @@ path = "src/lib/mod.rs"
 [dependencies]
 termion = "1.5.5"
 stretch = "0.3.2"
+textwrap = "0.12"

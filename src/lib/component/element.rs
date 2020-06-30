@@ -44,7 +44,10 @@ impl Element for char {
 
 impl Element for Rc<String> {
     fn style(&self) -> Style {
-        Style::new().width(Percent(1.0)).height(Percent(1.0))
+        Style::new()
+            .width(Percent(1.0))
+            .height(Percent(1.0))
+            .background(crate::style::Color::Green)
     }
 
     fn content(&self) -> Content {

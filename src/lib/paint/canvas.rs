@@ -1,6 +1,7 @@
 use super::{Cell, Layer};
 use crate::style::{Color, ColorStyleInherited};
 use std::fmt::{Display, Error, Formatter};
+use std::rc::Rc;
 use stretch::result::Layout;
 
 #[derive(Default, Debug)]
@@ -86,7 +87,7 @@ impl Canvas {
 
 impl From<(Layout, ColorStyleInherited, char)> for Canvas {
     fn from((layout, mut style, c): (Layout, ColorStyleInherited, char)) -> Self {
-        style.background = Color::Transparent;
+        style.background = Color::Transparent; // TODO from caller
 
         Self {
             x: layout.location.x as usize,
@@ -94,6 +95,42 @@ impl From<(Layout, ColorStyleInherited, char)> for Canvas {
             width: 1,
             height: 1,
             vec: vec![(style, c).into()],
+        }
+    }
+}
+
+impl From<(Layout, ColorStyleInherited, Rc<String>)> for Canvas {
+    fn from((layout, mut style, s): (Layout, ColorStyleInherited, Rc<String>)) -> Self {
+        style.background = Color::Transparent; // TODO from caller
+
+        let x = layout.location.x as usize;
+        let y = layout.location.y as usize;
+        let width = layout.size.width as usize;
+        let height = layout.size.height as usize;
+        let mut vec = Vec::with_capacity(width * height);
+        let strs = textwrap::Wrapper::new(width)
+            .break_words(false)
+            .wrap(&s[..]);
+        let len = strs.len();
+
+        for (l, s) in strs.iter().enumerate() {
+            let len = s.len();
+            let cells = s
+                .chars() // TODO Not 'real' chars
+                .map(|c| Cell::from((style, c)));
+
+            cells.for_each(|cell| vec.push(cell));
+            (len..width).for_each(|_| vec.push(Default::default()));
+        }
+
+        (width * len..width * height).for_each(|_| vec.push(Default::default()));
+
+        Self {
+            x,
+            y,
+            width,
+            height,
+            vec,
         }
     }
 }

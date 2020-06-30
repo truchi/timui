@@ -21,13 +21,16 @@ impl UINode {
             .map(|parent| parent.get_value().layout.unwrap());
         let mut element = self.get_value_mut();
 
+        // println!("BEFORE");
         element.layout(ctx.stretch, parent_layout);
         element.paint();
+        // println!("{:#?}", element.layout);
 
         ctx
     }
 
     pub fn render_after<'ui>(&self, mut ctx: Context<'ui>) -> Context<'ui> {
+        // println!("AFTER");
         Ref::map(self.get_value(), |element| {
             if let Some(paint) = &element.paint {
                 paint.below(&mut ctx.canvas);

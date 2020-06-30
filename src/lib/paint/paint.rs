@@ -39,6 +39,7 @@ impl From<(Layout, ColorStyleInherited, Content)> for Paint {
         let content = match content {
             Content::None => Default::default(),
             Content::Char(c) => (layout, style, c).into(),
+            Content::String(s) => (layout, style, s).into(),
             _ => Default::default(),
         };
 

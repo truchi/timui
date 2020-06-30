@@ -7,5 +7,5 @@ pub fn render<E: Element + 'static>(element: E) {
     let element: ElementObject = element.into();
     let mut ui: UI = element.into();
 
-    ui.render(width as usize, height as usize);
+    ui.render(width as usize, height as usize - 5);
 }
