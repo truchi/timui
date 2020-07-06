@@ -4,6 +4,9 @@
 //!
 //! TODO document `Style` API usage
 
+#[macro_use]
+mod style_macro;
+
 mod color;
 mod color_style;
 mod color_style_inherited;
