@@ -121,12 +121,19 @@ impl Component for Comp4 {
 }
 
 fn main() {
-    for i in (0..=151) {
-        let j = 151 - i;
-        println!("{}", j);
-        std::thread::sleep(std::time::Duration::from_millis(200));
-        render((Root, j));
-    }
+    let text = "textwrap: a small library for wrapping text.";
+
+    println!(
+        "{}",
+        textwrap::Wrapper::new(1).break_words(false).fill(text)
+    );
+
+    // for i in (0..=151) {
+    // let j = 151 - i;
+    // println!("{}", j);
+    // std::thread::sleep(std::time::Duration::from_millis(200));
+    // render((Root, j));
+    // }
     // render((Root, 12));
     // println!("{}", "💖💖💖");
     // println!("{}", "🎁🎁🎁");

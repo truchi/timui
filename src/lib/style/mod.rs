@@ -1,3 +1,9 @@
+//! # `Style` module
+//!
+//! `Component` styling.
+//!
+//! TODO document `Style` API usage
+
 mod color;
 mod color_style;
 mod color_style_inherited;

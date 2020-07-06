@@ -21,6 +21,28 @@ version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
+name = "paste"
+version = "0.1.18"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "paste-impl 0.1.18 (registry+https://github.com/rust-lang/crates.io-index)",
+ "proc-macro-hack 0.5.16 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "paste-impl"
+version = "0.1.18"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "proc-macro-hack 0.5.16 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "proc-macro-hack"
+version = "0.5.16"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
 name = "redox_syscall"
 version = "0.1.56"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -56,7 +78,7 @@ dependencies = [
 [[package]]
 name = "textwrap"
 version = "0.12.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
+source = "git+https://github.com/mgeisler/textwrap#9b553e326625e655fb9a4f399f475b8d3da7959c"
 dependencies = [
  "unicode-width 0.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
@@ -65,9 +87,10 @@ dependencies = [
 name = "timui"
 version = "0.1.0"
 dependencies = [
+ "paste 0.1.18 (registry+https://github.com/rust-lang/crates.io-index)",
  "stretch 0.3.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "termion 1.5.5 (registry+https://github.com/rust-lang/crates.io-index)",
- "textwrap 0.12.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "textwrap 0.12.0 (git+https://github.com/mgeisler/textwrap)",
 ]
 
 [[package]]
@@ -80,9 +103,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum libc 0.2.71 (registry+https://github.com/rust-lang/crates.io-index)" = "9457b06509d27052635f90d6466700c65095fdf75409b3fbdd903e988b886f49"
 "checksum libm 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)" = "7fc7aa29613bd6a620df431842069224d8bc9011086b1db4c0e0cd47fa03ec9a"
 "checksum numtoa 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "b8f8bdf33df195859076e54ab11ee78a1b208382d3a26ec40d142ffc1ecc49ef"
+"checksum paste 0.1.18 (registry+https://github.com/rust-lang/crates.io-index)" = "45ca20c77d80be666aef2b45486da86238fabe33e38306bd3118fe4af33fa880"
+"checksum paste-impl 0.1.18 (registry+https://github.com/rust-lang/crates.io-index)" = "d95a7db200b97ef370c8e6de0088252f7e0dfff7d047a28528e47456c0fc98b6"
+"checksum proc-macro-hack 0.5.16 (registry+https://github.com/rust-lang/crates.io-index)" = "7e0456befd48169b9f13ef0f0ad46d492cf9d2dbb918bcf38e01eed4ce3ec5e4"
 "checksum redox_syscall 0.1.56 (registry+https://github.com/rust-lang/crates.io-index)" = "2439c63f3f6139d1b57529d16bc3b8bb855230c8efcc5d3a896c8bea7c3b1e84"
 "checksum redox_termios 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)" = "7e891cfe48e9100a70a3b6eb652fef28920c117d366339687bd5576160db0f76"
 "checksum stretch 0.3.2 (registry+https://github.com/rust-lang/crates.io-index)" = "7b0dc6d20ce137f302edf90f9cd3d278866fd7fb139efca6f246161222ad6d87"
 "checksum termion 1.5.5 (registry+https://github.com/rust-lang/crates.io-index)" = "c22cec9d8978d906be5ac94bceb5a010d885c626c4c8855721a4dbd20e3ac905"
-"checksum textwrap 0.12.0 (registry+https://github.com/rust-lang/crates.io-index)" = "e30fc9a1b93fe45a3811654d49ead7306cf8fb18aa7fe6bf630a1099111cd2d6"
+"checksum textwrap 0.12.0 (git+https://github.com/mgeisler/textwrap)" = "<none>"
 "checksum unicode-width 0.1.7 (registry+https://github.com/rust-lang/crates.io-index)" = "caaa9d531767d1ff2150b9332433f32a24622147e5ebb1f26409d5da67afd479"

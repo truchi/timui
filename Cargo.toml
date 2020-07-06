@@ -11,4 +11,6 @@ path = "src/lib/mod.rs"
 [dependencies]
 termion = "1.5.5"
 stretch = "0.3.2"
-textwrap = "0.12"
+textwrap = { git = "https://github.com/mgeisler/textwrap" }
+# textwrap = "0.12"
+paste = "0.1"

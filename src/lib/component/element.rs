@@ -12,8 +12,11 @@ pub type Elements = Vec<ElementObject>;
 
 /// Inner `Content` for `Component`s
 pub enum Content {
+    /// `char`
     Char(char),
+    /// `Rc<String>`
     String(Rc<String>),
+    /// `None`
     None,
 }
 
