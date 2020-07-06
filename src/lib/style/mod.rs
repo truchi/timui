@@ -6,6 +6,8 @@
 
 #[macro_use]
 mod style_macro;
+#[macro_use]
+mod color_macro;
 
 mod color;
 mod color_style;

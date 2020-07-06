@@ -1,3 +1,6 @@
+//! # `Color`
+
+/// `Color`
 #[derive(Clone, Copy, PartialEq, Debug)]
 pub enum Color {
     Black,
@@ -22,30 +25,10 @@ pub enum Color {
 }
 
 impl Default for Color {
+    /// `Color::Transparent`
     fn default() -> Self {
         Self::Transparent
     }
-}
-
-macro_rules! derive_colors {
-    ($($color:ident,)*) => {
-        impl Color {
-            pub fn fg_str(&self) -> &'static str {
-                use termion::color;
-                match self {
-                    Self::Transparent => "",
-                    $(Self::$color => color::$color.fg_str(),)*
-                }
-            }
-            pub fn bg_str(&self) -> &'static str {
-                use termion::color;
-                match self {
-                    Self::Transparent => "",
-                    $(Self::$color => color::$color.bg_str(),)*
-                }
-            }
-        }
-    };
 }
 
 derive_colors!(

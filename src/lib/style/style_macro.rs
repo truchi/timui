@@ -1,3 +1,6 @@
+//! # Macro for `Style` methods
+
+/// Macro for `Style` methods
 macro_rules! style_methods {
     (impl doc $doc:expr, $item:item) => {
         #[doc = $doc]
