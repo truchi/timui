@@ -2,8 +2,7 @@
 
 use super::Component;
 use crate::style::{Percent, Style};
-use std::fmt::Debug;
-use std::rc::Rc;
+use std::{fmt::Debug, rc::Rc};
 
 /// `Element` trait object
 pub type ElementObject = Box<dyn Element>;

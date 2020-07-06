@@ -4,11 +4,11 @@ use stretch::result::Layout;
 
 #[derive(Default, Debug)]
 pub struct Uniform {
-    pub x: usize,
-    pub y: usize,
-    pub width: usize,
+    pub x:      usize,
+    pub y:      usize,
+    pub width:  usize,
     pub height: usize,
-    pub cell: Cell,
+    pub cell:   Cell,
 }
 
 impl Layer for Uniform {
@@ -40,11 +40,11 @@ impl Layer for Uniform {
 impl From<(Layout, ColorStyleInherited, char)> for Uniform {
     fn from((layout, style, c): (Layout, ColorStyleInherited, char)) -> Self {
         Self {
-            x: layout.location.x as usize,
-            y: layout.location.y as usize,
-            width: layout.size.width as usize,
+            x:      layout.location.x as usize,
+            y:      layout.location.y as usize,
+            width:  layout.size.width as usize,
             height: layout.size.height as usize,
-            cell: (style, c).into(),
+            cell:   (style, c).into(),
         }
     }
 }

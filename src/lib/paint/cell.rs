@@ -5,10 +5,10 @@ use std::fmt::{Display, Error, Formatter};
 pub struct Cell {
     pub foreground: Color,
     pub background: Color,
-    pub bold: bool,
-    pub italic: bool,
-    pub underline: bool,
-    pub c: char,
+    pub bold:       bool,
+    pub italic:     bool,
+    pub underline:  bool,
+    pub c:          char,
 }
 
 impl Cell {

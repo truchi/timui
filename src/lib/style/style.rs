@@ -1,8 +1,6 @@
 //! # `Style`
 
-use super::color::*;
-use super::color_style::*;
-use super::layout_style::*;
+use super::{color::*, color_style::*, layout_style::*};
 
 /// # `Style`
 #[derive(Copy, Clone, Default, Debug)]
@@ -10,45 +8,46 @@ pub struct Style {
     /// Layouting styles
     pub(crate) layout: LayoutStyle,
     /// Visual styles
-    pub(crate) color: ColorStyle,
+    pub(crate) color:  ColorStyle,
 }
 
 /// Convenient methods for building a `Style`
 impl Style {
-    /// Returns `Default` `Style`
-    pub fn new() -> Self {
-        Default::default()
-    }
-
     style_methods!(enum display: Display;
         flex: Flex,
         none: None,
     );
+
     style_methods!(enum position_type: PositionType;
         absolute: Absolute,
         relative: Relative,
     );
+
     style_methods!(enum direction: Direction;
         inherit_direction: Inherit,
         ltr: LTR,
         rtl: RTL,
     );
+
     style_methods!(enum flex_direction: FlexDirection;
         row: Row,
         row_reverse: RowReverse,
         column: Column,
         column_reverse: ColumnReverse,
     );
+
     style_methods!(enum flex_wrap: FlexWrap;
         no_wrap: NoWrap,
         wrap: Wrap,
         wrap_reverse: WrapReverse,
     );
+
     style_methods!(enum overflow: Overflow;
         visible: Visible,
         hidden: Hidden,
         scroll: Scroll,
     );
+
     style_methods!(enum align_items: AlignItems;
         items_start: FlexStart,
         items_end: FlexEnd,
@@ -56,6 +55,7 @@ impl Style {
         items_baseline: Baseline,
         items_stretch: Stretch,
     );
+
     style_methods!(enum align_self: AlignSelf;
         self_auto: Auto,
         self_start: FlexStart,
@@ -64,6 +64,7 @@ impl Style {
         self_baseline: Baseline,
         self_stretch: Stretch,
     );
+
     style_methods!(enum align_content: AlignContent;
         content_start: FlexStart,
         content_end: FlexEnd,
@@ -72,6 +73,7 @@ impl Style {
         content_around: SpaceAround,
         content_between: SpaceBetween,
     );
+
     style_methods!(enum justify_content: JustifyContent;
         justify_start: FlexStart,
         justify_end: FlexEnd,
@@ -82,13 +84,23 @@ impl Style {
     );
 
     style_methods!(rect position: start end top bottom);
+
     style_methods!(rect margin: margin_start margin_end margin_top margin_bottom);
+
     style_methods!(rect padding: padding_start padding_end padding_top padding_bottom);
+
     style_methods!(rect border: border_start border_end border_top border_bottom);
 
     style_methods!(size size width height);
+
     style_methods!(size min_size min_width min_height);
+
     style_methods!(size max_size max_width max_height);
+
+    /// Returns `Default` `Style`
+    pub fn new() -> Self {
+        Default::default()
+    }
 
     // FLEX GROW/SHRINK/BASIS
 

@@ -1,6 +1,5 @@
 use super::{Canvas, Cell, Uniform};
-use crate::component::Content;
-use crate::style::ColorStyleInherited;
+use crate::{component::Content, style::ColorStyleInherited};
 use stretch::result::Layout;
 
 // #[derive(Default)]
@@ -18,7 +17,7 @@ use stretch::result::Layout;
 #[derive(Default)]
 pub struct Paint {
     background: Uniform,
-    content: Canvas,
+    content:    Canvas,
     // borders: Borders,
 }
 

@@ -1,9 +1,12 @@
-use lib::element::Element;
-use lib::layout::Layout;
-use lib::render::render;
-use lib::style::Color;
-use lib::style::Style;
-use lib::{component, element, view};
+use lib::{
+    component,
+    element,
+    element::Element,
+    layout::Layout,
+    render::render,
+    style::{Color, Style},
+    view,
+};
 use termion::terminal_size;
 
 #[derive(Default, Debug)]
@@ -12,8 +15,8 @@ pub type RootProps = (u16, u16);
 pub type RootChildren = ();
 
 impl Component for Root {
-    type Props = RootProps;
     type Children = RootChildren;
+    type Props = RootProps;
 
     fn layout(&self, (w, h): &Self::Props, _: &Self::Children) -> Layout {
         Layout::Absolute {

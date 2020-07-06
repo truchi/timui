@@ -1,8 +1,10 @@
 use super::UIElement;
-use crate::component::ElementObject;
-use crate::paint::Canvas;
-use crate::style::ColorStyleInherited;
-use crate::utils::tree::Node;
+use crate::{
+    component::ElementObject,
+    paint::Canvas,
+    style::ColorStyleInherited,
+    utils::tree::Node,
+};
 use std::cell::Ref;
 use stretch::node::Stretch;
 
@@ -11,7 +13,7 @@ pub struct StretchUINode(pub Stretch, pub UINode);
 
 pub struct Context<'ui> {
     pub stretch: &'ui mut Stretch,
-    pub canvas: Canvas,
+    pub canvas:  Canvas,
 }
 
 impl UINode {

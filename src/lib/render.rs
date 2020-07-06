@@ -1,5 +1,7 @@
-use crate::component::{Element, ElementObject};
-use crate::ui::UI;
+use crate::{
+    component::{Element, ElementObject},
+    ui::UI,
+};
 use termion::terminal_size;
 
 pub fn render<E: Element + 'static>(element: E) {

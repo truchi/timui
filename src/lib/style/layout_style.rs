@@ -5,7 +5,8 @@ pub use stretch::geometry::Rect;
 /// Re-export from [`Stretch`](https://docs.rs/stretch/latest/stretch/index.html)
 pub use stretch::geometry::Size;
 /// Re-export from [`Stretch`](https://docs.rs/stretch/latest/stretch/index.html)
-pub use stretch::number::Number::{self, Defined}; // Undefined clashes with Dimension::Undefined
+pub use stretch::number::Number::{self, Defined}; // Undefined clashes with
+                                                  // Dimension::Undefined
 /// Re-export from [`Stretch`](https://docs.rs/stretch/latest/stretch/index.html)
 pub use stretch::style::AlignContent::{self, *};
 /// Re-export from [`Stretch`](https://docs.rs/stretch/latest/stretch/index.html)

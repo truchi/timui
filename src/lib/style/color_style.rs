@@ -12,11 +12,11 @@ pub struct ColorStyle {
     /// Background `Color`
     pub background: Color,
     /// Bold text, `Option::None` for inheritance
-    pub bold: Option<bool>,
+    pub bold:       Option<bool>,
     /// Italic text, `Option::None` for inheritance
-    pub italic: Option<bool>,
+    pub italic:     Option<bool>,
     /// Underline text
-    pub underline: bool,
+    pub underline:  bool,
 }
 
 impl ColorStyle {
@@ -25,9 +25,9 @@ impl ColorStyle {
         ColorStyleInherited {
             foreground: self.foreground.unwrap_or(inherited.foreground),
             background: self.background,
-            bold: self.bold.unwrap_or(inherited.bold),
-            italic: self.italic.unwrap_or(inherited.italic),
-            underline: self.underline,
+            bold:       self.bold.unwrap_or(inherited.bold),
+            italic:     self.italic.unwrap_or(inherited.italic),
+            underline:  self.underline,
         }
     }
 }

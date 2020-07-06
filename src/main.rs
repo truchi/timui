@@ -1,6 +1,8 @@
-use lib::component::{Component, ElementObject, Elements};
-use lib::render::render;
-use lib::style::{Color, Dimension, Percent, Points, Style};
+use lib::{
+    component::{Component, ElementObject, Elements},
+    render::render,
+    style::{Color, Dimension, Percent, Points, Style},
+};
 use std::rc::Rc;
 
 #[derive(Default, Debug)]
@@ -64,9 +66,9 @@ impl Component for Comp2 {
             //
             (Comp3, 'a').into(),
             Comp4.into(),
-            // (Comp3, *props).into(),
-            // ().into(),
-            // 'a'.into(),
+            /* (Comp3, *props).into(),
+             * ().into(),
+             * 'a'.into(), */
         ]
     }
 }

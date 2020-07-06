@@ -1,6 +1,7 @@
-use std::cell::{Ref, RefCell, RefMut};
-use std::rc::Rc;
-use std::rc::Weak;
+use std::{
+    cell::{Ref, RefCell, RefMut},
+    rc::{Rc, Weak},
+};
 
 pub type Parent<T> = Weak<RefCell<Tree<T>>>;
 
@@ -67,7 +68,7 @@ impl<T> Node<T> {
 
 #[derive(Debug)]
 pub struct Tree<T> {
-    value: T,
-    parent: Parent<T>,
+    value:    T,
+    parent:   Parent<T>,
     children: Vec<Node<T>>,
 }

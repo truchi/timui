@@ -1,16 +1,18 @@
 use super::{Cell, Layer};
 use crate::style::{Color, ColorStyleInherited};
-use std::fmt::{Display, Error, Formatter};
-use std::rc::Rc;
+use std::{
+    fmt::{Display, Error, Formatter},
+    rc::Rc,
+};
 use stretch::result::Layout;
 
 #[derive(Default, Debug)]
 pub struct Canvas {
-    pub x: usize,
-    pub y: usize,
-    pub width: usize,
+    pub x:      usize,
+    pub y:      usize,
+    pub width:  usize,
     pub height: usize,
-    pub vec: Vec<Cell>,
+    pub vec:    Vec<Cell>,
 }
 
 impl Layer for Canvas {
@@ -90,11 +92,11 @@ impl From<(Layout, ColorStyleInherited, char)> for Canvas {
         style.background = Color::Transparent; // TODO from caller
 
         Self {
-            x: layout.location.x as usize,
-            y: layout.location.y as usize,
-            width: 1,
+            x:      layout.location.x as usize,
+            y:      layout.location.y as usize,
+            width:  1,
             height: 1,
-            vec: vec![(style, c).into()],
+            vec:    vec![(style, c).into()],
         }
     }
 }

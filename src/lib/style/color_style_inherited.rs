@@ -10,11 +10,11 @@ pub struct ColorStyleInherited {
     /// Background `Color`
     pub background: Color,
     /// Bold text
-    pub bold: bool,
+    pub bold:       bool,
     /// Italic text
-    pub italic: bool,
+    pub italic:     bool,
     /// Underline text
-    pub underline: bool,
+    pub underline:  bool,
 }
 
 impl Default for ColorStyleInherited {
@@ -23,9 +23,9 @@ impl Default for ColorStyleInherited {
         Self {
             foreground: Color::White,
             background: Color::Black,
-            bold: false,
-            italic: false,
-            underline: false,
+            bold:       false,
+            italic:     false,
+            underline:  false,
         }
     }
 }
