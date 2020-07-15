@@ -1,4 +1,4 @@
-use super::{Canvas, Cell, Uniform};
+use super::{Canvas, Uniform};
 use crate::{component::Content, style::ColorStyleInherited};
 use stretch::result::Layout;
 
@@ -39,7 +39,6 @@ impl From<(Layout, ColorStyleInherited, Content)> for Paint {
             Content::None => Default::default(),
             Content::Char(c) => (layout, style, c).into(),
             Content::String(s) => (layout, style, s).into(),
-            _ => Default::default(),
         };
 
         let background = (layout, style, ' ').into();

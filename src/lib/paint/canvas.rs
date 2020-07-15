@@ -115,7 +115,7 @@ impl From<(Layout, ColorStyleInherited, Rc<String>)> for Canvas {
             .wrap(&s[..]);
         let len = strs.len();
 
-        for (l, s) in strs.iter().enumerate() {
+        for (_, s) in strs.iter().enumerate() {
             let len = s.len();
             let cells = s
                 .chars() // TODO Not 'real' chars
