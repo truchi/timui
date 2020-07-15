@@ -1,3 +1,5 @@
+//! # `UI` module
+
 mod ui;
 mod ui_element;
 mod ui_node;
