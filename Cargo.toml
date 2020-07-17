@@ -14,3 +14,6 @@ stretch = "0.3.2"
 textwrap = { git = "https://github.com/mgeisler/textwrap" }
 # textwrap = "0.12"
 paste = "0.1"
+
+[dev-dependencies]
+pretty_assertions = "0.6.1"

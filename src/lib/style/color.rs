@@ -100,6 +100,7 @@ derive_colors!(
 #[cfg(test)]
 mod tests {
     use super::Color;
+    use pretty_assertions::{assert_eq, assert_ne};
 
     #[test]
     fn transparent_is_default() {

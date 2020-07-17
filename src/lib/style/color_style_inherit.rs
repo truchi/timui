@@ -18,15 +18,15 @@ pub struct ColorStyleInherit {
     pub underline:  bool,
 }
 
-impl ColorStyleInherit {
-    /// Inherits this style from a `ColorStyle`
-    pub fn inherit(&self, color_style: ColorStyle) -> ColorStyle {
-        ColorStyle {
-            foreground: self.foreground.unwrap_or(color_style.foreground),
-            background: self.background,
-            bold:       self.bold.unwrap_or(color_style.bold),
-            italic:     self.italic.unwrap_or(color_style.italic),
-            underline:  self.underline,
-        }
-    }
-}
+// impl ColorStyleInherit {
+// /// Inherits this style from a `ColorStyle`
+// pub fn inherit(&self, color_style: ColorStyle) -> ColorStyle {
+// ColorStyle {
+// foreground: self.foreground.unwrap_or(color_style.foreground),
+// background: self.background,
+// bold:       self.bold.unwrap_or(color_style.bold),
+// italic:     self.italic.unwrap_or(color_style.italic),
+// underline:  self.underline,
+// }
+// }
+// }

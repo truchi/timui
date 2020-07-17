@@ -8,8 +8,8 @@
 // #![feature(trait_alias)]
 
 pub mod component;
-pub mod paint;
-pub mod render;
+// pub mod paint;
+// pub mod render;
 pub mod style;
-pub mod ui;
+// pub mod ui;
 mod utils;
