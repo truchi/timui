@@ -3,7 +3,7 @@
 use super::Color;
 
 /// Represents color-related styles of a `Component`
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Default, Debug)]
 pub struct ColorStyle {
     /// Foreground `Color`
     pub foreground: Color,
@@ -15,17 +15,4 @@ pub struct ColorStyle {
     pub italic:     bool,
     /// Underline text
     pub underline:  bool,
-}
-
-impl Default for ColorStyle {
-    /// `Color::White` foreground, `Color::Black` background
-    fn default() -> Self {
-        Self {
-            foreground: Color::White,
-            background: Color::Black,
-            bold:       false,
-            italic:     false,
-            underline:  false,
-        }
-    }
 }

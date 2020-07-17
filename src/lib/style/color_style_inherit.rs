@@ -19,13 +19,13 @@ pub struct ColorStyleInherit {
 }
 
 impl ColorStyleInherit {
-    /// Inherits this style from another
-    pub fn inherit(&self, inherited: ColorStyle) -> ColorStyle {
+    /// Inherits this style from a `ColorStyle`
+    pub fn inherit(&self, color_style: ColorStyle) -> ColorStyle {
         ColorStyle {
-            foreground: self.foreground.unwrap_or(inherited.foreground),
+            foreground: self.foreground.unwrap_or(color_style.foreground),
             background: self.background,
-            bold:       self.bold.unwrap_or(inherited.bold),
-            italic:     self.italic.unwrap_or(inherited.italic),
+            bold:       self.bold.unwrap_or(color_style.bold),
+            italic:     self.italic.unwrap_or(color_style.italic),
             underline:  self.underline,
         }
     }
