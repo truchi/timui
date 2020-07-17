@@ -1,5 +1,5 @@
 use super::{Cell, Layer};
-use crate::style::ColorStyleInherited;
+use crate::style::ColorStyle;
 use stretch::result::Layout;
 
 #[derive(Default, Debug)]
@@ -37,8 +37,8 @@ impl Layer for Uniform {
     }
 }
 
-impl From<(Layout, ColorStyleInherited, char)> for Uniform {
-    fn from((layout, style, c): (Layout, ColorStyleInherited, char)) -> Self {
+impl From<(Layout, ColorStyle, char)> for Uniform {
+    fn from((layout, style, c): (Layout, ColorStyle, char)) -> Self {
         Self {
             x:      layout.location.x as usize,
             y:      layout.location.y as usize,

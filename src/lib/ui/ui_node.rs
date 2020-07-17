@@ -1,10 +1,5 @@
 use super::UIElement;
-use crate::{
-    component::ElementObject,
-    paint::Canvas,
-    style::ColorStyleInherited,
-    utils::tree::Node,
-};
+use crate::{component::ElementObject, paint::Canvas, style::ColorStyle, utils::tree::Node};
 use std::cell::Ref;
 use stretch::node::Stretch;
 
@@ -44,10 +39,8 @@ impl UINode {
     }
 }
 
-impl From<(Stretch, ColorStyleInherited, ElementObject)> for StretchUINode {
-    fn from(
-        (mut stretch, inherited, element): (Stretch, ColorStyleInherited, ElementObject),
-    ) -> Self {
+impl From<(Stretch, ColorStyle, ElementObject)> for StretchUINode {
+    fn from((mut stretch, inherited, element): (Stretch, ColorStyle, ElementObject)) -> Self {
         let style = element.style();
         let elements = element.children();
         let layout_style = style.layout;

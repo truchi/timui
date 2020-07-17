@@ -1,5 +1,5 @@
 use super::{Canvas, Uniform};
-use crate::{component::Content, style::ColorStyleInherited};
+use crate::{component::Content, style::ColorStyle};
 use stretch::result::Layout;
 
 // #[derive(Default)]
@@ -33,8 +33,8 @@ impl Paint {
     }
 }
 
-impl From<(Layout, ColorStyleInherited, Content)> for Paint {
-    fn from((layout, style, content): (Layout, ColorStyleInherited, Content)) -> Self {
+impl From<(Layout, ColorStyle, Content)> for Paint {
+    fn from((layout, style, content): (Layout, ColorStyle, Content)) -> Self {
         let content = match content {
             Content::None => Default::default(),
             Content::Char(c) => (layout, style, c).into(),

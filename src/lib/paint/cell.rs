@@ -1,6 +1,6 @@
 //! # `Cell`
 
-use crate::style::{Color, ColorStyleInherited};
+use crate::style::{Color, ColorStyle};
 use std::fmt::{Display, Error, Formatter};
 
 /// A terminal cell
@@ -59,8 +59,8 @@ impl Cell {
     }
 }
 
-impl From<(ColorStyleInherited, char)> for Cell {
-    fn from((style, c): (ColorStyleInherited, char)) -> Self {
+impl From<(ColorStyle, char)> for Cell {
+    fn from((style, c): (ColorStyle, char)) -> Self {
         Self {
             foreground: style.foreground,
             background: style.background,

@@ -1,7 +1,7 @@
 use crate::{
     component::ElementObject,
     paint::Paint,
-    style::{ColorStyleInherited, LayoutStyle},
+    style::{ColorStyle, LayoutStyle},
 };
 use std::fmt::{Debug, Formatter, Result};
 use stretch::{
@@ -14,7 +14,7 @@ pub struct UIElement {
     pub element:      ElementObject,
     pub layout:       Option<Layout>,
     pub layout_style: LayoutStyle,
-    pub color_style:  ColorStyleInherited,
+    pub color_style:  ColorStyle,
     pub paint:        Option<Paint>,
 }
 

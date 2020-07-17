@@ -1,7 +1,7 @@
 //! # `Canvas`
 
 use super::{Cell, Layer};
-use crate::style::{Color, ColorStyleInherited};
+use crate::style::{Color, ColorStyle};
 use std::{
     fmt::{Display, Error, Formatter},
     rc::Rc,
@@ -98,8 +98,8 @@ impl Canvas {
     }
 }
 
-impl From<(Layout, ColorStyleInherited, char)> for Canvas {
-    fn from((layout, mut style, c): (Layout, ColorStyleInherited, char)) -> Self {
+impl From<(Layout, ColorStyle, char)> for Canvas {
+    fn from((layout, mut style, c): (Layout, ColorStyle, char)) -> Self {
         style.background = Color::Transparent; // TODO from caller
 
         Self {
@@ -112,8 +112,8 @@ impl From<(Layout, ColorStyleInherited, char)> for Canvas {
     }
 }
 
-impl From<(Layout, ColorStyleInherited, Rc<String>)> for Canvas {
-    fn from((layout, mut style, s): (Layout, ColorStyleInherited, Rc<String>)) -> Self {
+impl From<(Layout, ColorStyle, Rc<String>)> for Canvas {
+    fn from((layout, mut style, s): (Layout, ColorStyle, Rc<String>)) -> Self {
         style.background = Color::Transparent; // TODO from caller
 
         let x = layout.location.x as usize;

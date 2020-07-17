@@ -1,6 +1,6 @@
 //! # `Style`
 
-use super::{color::*, color_style::*, layout_style::*};
+use super::{color::*, color_style_inherit::*, layout_style::*};
 
 /// # `Style`
 #[derive(Copy, Clone, Default, Debug)]
@@ -8,7 +8,7 @@ pub struct Style {
     /// Layouting styles
     pub(crate) layout: LayoutStyle,
     /// Visual styles
-    pub(crate) color:  ColorStyle,
+    pub(crate) color:  ColorStyleInherit,
 }
 
 /// `Style` constructor
