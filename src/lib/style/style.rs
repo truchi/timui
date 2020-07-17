@@ -84,6 +84,43 @@ macro_rules! style_methods {
             }
         );
     };
+    (option color $method:ident $inherit:ident) => {
+        style_methods!(impl doc concat!(" Sets `", stringify!($method), "`"),
+            pub fn $method(mut self, color: Color) -> Self {
+                self.color.$method = Some(color);
+                self
+            }
+        );
+
+        style_methods!(impl doc concat!(" Inherits `", stringify!($method), "`"),
+            pub fn $inherit(mut self) -> Self {
+                self.color.$method = None;
+                self
+            }
+        );
+    };
+    (option bool $method:ident $no:ident $inherit:ident) => {
+        style_methods!(impl doc concat!(" Sets `", stringify!($method), "`"),
+            pub fn $method(mut self) -> Self {
+                self.color.$method = Some(true);
+                self
+            }
+        );
+
+        style_methods!(impl doc concat!(" Unsets `", stringify!($method), "`"),
+            pub fn $no(mut self) -> Self {
+                self.color.$method = Some(false);
+                self
+            }
+        );
+
+        style_methods!(impl doc concat!(" Inherits `", stringify!($method), "`"),
+            pub fn $inherit(mut self) -> Self {
+                self.color.$method = None;
+                self
+            }
+        );
+    };
 }
 
 /// Convenient methods for building a `Style`'s display
@@ -172,8 +209,6 @@ impl Style {
 
     style_methods!(size max_size max_width max_height);
 
-    // FLEX GROW/SHRINK/BASIS
-
     /// Sets `flex_grow`
     pub fn grow(mut self, grow: f32) -> Self {
         self.layout.flex_grow = grow;
@@ -192,8 +227,6 @@ impl Style {
         self
     }
 
-    // ASPECT RATIO
-
     /// Sets `aspect_ratio`
     pub fn ratio(mut self, ratio: Number) -> Self {
         self.layout.aspect_ratio = ratio;
@@ -203,77 +236,13 @@ impl Style {
 
 /// Convenient methods for building a `Style`'s colors
 impl Style {
-    // FORE/BACK-GROUND
+    style_methods!(option color foreground inherit_foreground);
 
-    /// Sets `foreground`
-    pub fn foreground(mut self, color: Color) -> Self {
-        self.color.foreground = Some(color);
-        self
-    }
+    style_methods!(option color background inherit_background);
 
-    /// Sets inherited `foreground`
-    pub fn inherit_foreground(mut self) -> Self {
-        self.color.foreground = None;
-        self
-    }
+    style_methods!(option bool bold no_bold inherit_bold);
 
-    /// Sets `background`
-    pub fn background(mut self, color: Color) -> Self {
-        self.color.background = color;
-        self
-    }
+    style_methods!(option bool italic no_italic inherit_italic);
 
-    // BOLD
-
-    /// Sets `bold`
-    pub fn bold(mut self) -> Self {
-        self.color.bold = Some(true);
-        self
-    }
-
-    /// Unsets `bold`
-    pub fn no_bold(mut self) -> Self {
-        self.color.bold = Some(false);
-        self
-    }
-
-    /// Sets inherited `bold`
-    pub fn inherit_bold(mut self) -> Self {
-        self.color.bold = None;
-        self
-    }
-
-    // ITALIC
-
-    /// Sets `italic`
-    pub fn italic(mut self) -> Self {
-        self.color.italic = Some(true);
-        self
-    }
-
-    /// Unsets `italic`
-    pub fn no_italic(mut self) -> Self {
-        self.color.italic = Some(false);
-        self
-    }
-
-    /// Sets inherited `italic`
-    pub fn inherit_italic(mut self) -> Self {
-        self.color.italic = None;
-        self
-    }
-
-    // UNDERLINE
-
-    /// Sets `underline`
-    pub fn underline(mut self) -> Self {
-        self.color.underline = true;
-        self
-    }
-
-    /// Unsets `underline`
-    pub fn no_underline(mut self) -> Self {
-        self.color.underline = false;
-        self
-    }
+    style_methods!(option bool underline no_underline inherit_underline);
 }
