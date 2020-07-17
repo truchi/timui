@@ -56,7 +56,7 @@ macro_rules! derive_colors {
     ($($color:ident,)*) => {
         impl Color {
             /// Returns the foreground escape sequence for this `Color`
-            pub fn fg_str(&self) -> &'static str {
+            pub fn fg(&self) -> &'static str {
                 match self {
                     Self::Transparent => "",
                     $(Self::$color => termion::color::$color.fg_str(),)*
@@ -64,7 +64,7 @@ macro_rules! derive_colors {
             }
 
             /// Returns the background escape sequence for this `Color`
-            pub fn bg_str(&self) -> &'static str {
+            pub fn bg(&self) -> &'static str {
                 match self {
                     Self::Transparent => "",
                     $(Self::$color => termion::color::$color.bg_str(),)*
@@ -92,3 +92,35 @@ derive_colors!(
     White,
     Yellow,
 );
+
+// ========================================================================= //
+//                                   TESTS                                   //
+// ========================================================================= //
+
+#[cfg(test)]
+mod tests {
+    use super::Color;
+
+    #[test]
+    fn transparent_is_default() {
+        assert_eq!(Color::default(), Color::Transparent);
+    }
+
+    #[test]
+    fn transparent_has_no_escape_sequences() {
+        assert_eq!(Color::Transparent.fg(), "");
+        assert_eq!(Color::Transparent.bg(), "");
+    }
+
+    #[test]
+    fn colors_have_correct_escape_sequences() {
+        assert_eq!(Color::Red.fg(), termion::color::Red.fg_str());
+        assert_eq!(Color::Red.bg(), termion::color::Red.bg_str());
+
+        assert_eq!(Color::Green.fg(), termion::color::Green.fg_str());
+        assert_eq!(Color::Green.bg(), termion::color::Green.bg_str());
+
+        assert_eq!(Color::Blue.fg(), termion::color::Blue.fg_str());
+        assert_eq!(Color::Blue.bg(), termion::color::Blue.bg_str());
+    }
+}

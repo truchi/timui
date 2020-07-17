@@ -76,13 +76,13 @@ impl Display for Cell {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
         use termion::style;
 
-        let foreground = self.foreground.fg_str();
+        let foreground = self.foreground.fg();
         let background = if self.background == Color::Transparent {
             Color::Black
         } else {
             self.background
         }
-        .bg_str();
+        .bg();
         let bold = if self.bold {
             <style::Bold as AsRef<str>>::as_ref(&style::Bold)
         } else {
