@@ -1,3 +1,5 @@
+//! # `Canvas`
+
 use super::{Cell, Layer};
 use crate::style::{Color, ColorStyleInherited};
 use std::{
@@ -6,13 +8,19 @@ use std::{
 };
 use stretch::result::Layout;
 
+/// A positioned rectangle of `Cell`s
 #[derive(Default, Debug)]
 pub struct Canvas {
-    pub x:      usize,
-    pub y:      usize,
-    pub width:  usize,
-    pub height: usize,
-    pub vec:    Vec<Cell>,
+    /// Horizontal distance from origin
+    x:      usize,
+    /// Vertical distance from origin
+    y:      usize,
+    /// Width
+    width:  usize,
+    /// Height
+    height: usize,
+    /// `Cell`s
+    vec:    Vec<Cell>,
 }
 
 impl Layer for Canvas {
@@ -42,6 +50,7 @@ impl Layer for Canvas {
 }
 
 impl Canvas {
+    /// Creates a `Canvas` filled with `color`ed background `Cell`s
     pub fn with_background(x: usize, y: usize, width: usize, height: usize, color: Color) -> Self {
         let mut vec = Vec::with_capacity(width * height);
 
@@ -58,6 +67,7 @@ impl Canvas {
         }
     }
 
+    /// Merges `above` above this `Canvas`
     pub fn above(&mut self, above: &impl Layer) {
         let (x, y, w, h) = self.intersect(above);
         let dx = x - self.x;
@@ -71,6 +81,7 @@ impl Canvas {
         }
     }
 
+    /// Merges `below` below this `Canvas`
     pub fn below(&mut self, below: &impl Layer) {
         let (x, y, w, h) = self.intersect(below);
         let dx = x - self.x;

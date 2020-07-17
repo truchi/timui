@@ -5,8 +5,8 @@ struct Comp;
 impl Component for Comp {
     type Props = ();
 
-    fn children(&self, _: &Self::Props) -> Elements {
-        vec![().into()]
+    fn children(&self, _: &()) -> Elements {
+        vec![]
     }
 }
 

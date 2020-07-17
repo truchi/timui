@@ -2,20 +2,19 @@
 
 use super::{Color, ColorStyleInherited};
 
-/// Represents color-related styles of a `Component`, with inheritance
-///
-/// `Option::None` for inheritance from parent
+/// Represents color-related styles of a `Component`, with inheritance. `None`
+/// for inheritance from parent.
 #[derive(Clone, Copy, Debug, Default)]
 pub struct ColorStyle {
-    /// Foreground `Color`, `Option::None` for inheritance
+    /// Foreground `Color`, `None` for inheritance
     pub foreground: Option<Color>,
-    /// Background `Color`
+    /// Background `Color`, not inheritable
     pub background: Color,
-    /// Bold text, `Option::None` for inheritance
+    /// Bold text, `None` for inheritance
     pub bold:       Option<bool>,
-    /// Italic text, `Option::None` for inheritance
+    /// Italic text, `None` for inheritance
     pub italic:     Option<bool>,
-    /// Underline text
+    /// Underline text, not inheritable
     pub underline:  bool,
 }
 

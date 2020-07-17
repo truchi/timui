@@ -11,6 +11,13 @@ pub struct Style {
     pub(crate) color:  ColorStyle,
 }
 
+impl Style {
+    /// Returns `Default` `Style`
+    pub fn new() -> Self {
+        Default::default()
+    }
+}
+
 /// Convenient methods for building a `Style`
 impl Style {
     style_methods!(enum display: Display;
@@ -96,11 +103,6 @@ impl Style {
     style_methods!(size min_size min_width min_height);
 
     style_methods!(size max_size max_width max_height);
-
-    /// Returns `Default` `Style`
-    pub fn new() -> Self {
-        Default::default()
-    }
 
     // FLEX GROW/SHRINK/BASIS
 

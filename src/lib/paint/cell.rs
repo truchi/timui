@@ -1,19 +1,29 @@
+//! # `Cell`
+
 use crate::style::{Color, ColorStyleInherited};
 use std::fmt::{Display, Error, Formatter};
 
+/// A terminal cell
 #[derive(Copy, Clone, Default, Debug)]
 pub struct Cell {
-    pub foreground: Color,
-    pub background: Color,
-    pub bold:       bool,
-    pub italic:     bool,
-    pub underline:  bool,
+    /// The char
     pub c:          char,
+    /// Foreground color
+    pub foreground: Color,
+    /// Background color
+    pub background: Color,
+    /// Wether char is bold
+    pub bold:       bool,
+    /// Wether char is italic
+    pub italic:     bool,
+    /// Wether char is underlined
+    pub underline:  bool,
 }
 
 impl Cell {
+    /// Creates an 'empty' (transparent foreground, no char) `Cell` with
+    /// `background` color
     pub fn with_background(background: Color) -> Self {
-        // TODO From<Color>?
         Self {
             foreground: Color::Transparent,
             background,
@@ -24,6 +34,7 @@ impl Cell {
         }
     }
 
+    /// Merges `above` above this `Cell`
     pub fn above(&self, above: &Self) -> Self {
         let mut merged = *self;
 
@@ -42,6 +53,7 @@ impl Cell {
         merged
     }
 
+    /// Merges `below` below this `Cell`
     pub fn below(&self, below: &Self) -> Self {
         below.above(self)
     }
