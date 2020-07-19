@@ -39,6 +39,20 @@ macro_rules! style_methods {
             }
         );)*
     };
+    (enum into $setter:ident: $enum:ty; $($fn:ident: $variant:ident,)*) => {
+        style_methods!(impl doc concat!(" Sets `", stringify!($enum), "`"),
+            pub fn $setter(mut self, $setter: impl Into<$enum>) -> Self {
+                self.layout.$setter = $setter.into();
+                self
+            }
+        );
+
+        $(style_methods!(impl doc concat!(" Sets `", stringify!($enum), "::", stringify!($variant), "`"),
+            pub fn $fn(self) -> Self {
+                self.$setter(<$enum>::$variant)
+            }
+        );)*
+    };
     (rect $name:ident: $start:ident $end:ident $top:ident $bottom:ident) => {
         style_methods!(impl rect $name);
         style_methods!(impl rect $name: $start, start);
@@ -48,38 +62,38 @@ macro_rules! style_methods {
     };
     (impl rect $name:ident) => {
         style_methods!(impl doc concat!(" Sets `", stringify!($name), "`"),
-            pub fn $name(mut self, $name: Rect<Dimension>) -> Self {
-                self.layout.$name = $name;
+            pub fn $name(mut self, $name: impl Into<Rect>) -> Self {
+                self.layout.$name = $name.into().into();
                 self
             }
         );
     };
     (impl rect $name:ident: $fn:ident, $place:ident) => {
         style_methods!(impl doc concat!(" Sets `", stringify!($name), ".", stringify!($place), "`"),
-            pub fn $fn(mut self, $place: Dimension) -> Self {
-                self.layout.$name.$place = $place;
+            pub fn $fn(mut self, $place: impl Into<Dimension>) -> Self {
+                self.layout.$name.$place = $place.into().into();
                 self
             }
         );
     };
     (size $size:ident $width:ident $height:ident) => {
         style_methods!(impl doc concat!(" Sets `", stringify!($size), "`"),
-            pub fn $size(mut self, $size: Size<Dimension>) -> Self {
-                self.layout.$size = $size;
+            pub fn $size(mut self, $size: impl Into<Size>) -> Self {
+                self.layout.$size = $size.into().into();
                 self
             }
         );
 
         style_methods!(impl doc concat!(" Sets `", stringify!($size), ".width`"),
-            pub fn $width(mut self, $width: Dimension) -> Self {
-                self.layout.$size.width = $width;
+            pub fn $width(mut self, $width: impl Into<Dimension>) -> Self {
+                self.layout.$size.width = $width.into().into();
                 self
             }
         );
 
         style_methods!(impl doc concat!(" Sets `", stringify!($size), ".height`"),
-            pub fn $height(mut self, $height: Dimension) -> Self {
-                self.layout.$size.height = $height;
+            pub fn $height(mut self, $height: impl Into<Dimension>) -> Self {
+                self.layout.$size.height = $height.into().into();
                 self
             }
         );
@@ -160,7 +174,7 @@ impl Style {
         scroll: Scroll,
     );
 
-    style_methods!(enum align_items: AlignItems;
+    style_methods!(enum into align_items: AlignItems;
         items_start: FlexStart,
         items_end: FlexEnd,
         items_center: Center,
@@ -168,7 +182,7 @@ impl Style {
         items_stretch: Stretch,
     );
 
-    style_methods!(enum align_self: AlignSelf;
+    style_methods!(enum into align_self: AlignSelf;
         self_auto: Auto,
         self_start: FlexStart,
         self_end: FlexEnd,
@@ -177,7 +191,7 @@ impl Style {
         self_stretch: Stretch,
     );
 
-    style_methods!(enum align_content: AlignContent;
+    style_methods!(enum into align_content: AlignContent;
         content_start: FlexStart,
         content_end: FlexEnd,
         content_center: Center,
@@ -186,7 +200,7 @@ impl Style {
         content_between: SpaceBetween,
     );
 
-    style_methods!(enum justify_content: JustifyContent;
+    style_methods!(enum into justify_content: JustifyContent;
         justify_start: FlexStart,
         justify_end: FlexEnd,
         justify_center: Center,
@@ -223,13 +237,13 @@ impl Style {
 
     /// Sets `flex_basis`
     pub fn basis(mut self, basis: Dimension) -> Self {
-        self.layout.flex_basis = basis;
+        self.layout.flex_basis = basis.into();
         self
     }
 
     /// Sets `aspect_ratio`
     pub fn ratio(mut self, ratio: Number) -> Self {
-        self.layout.aspect_ratio = ratio;
+        self.layout.aspect_ratio = ratio.into();
         self
     }
 }

@@ -1,7 +1,7 @@
 //! # `Element`
 
 use super::Component;
-use crate::style::{Percent, Style};
+use crate::style::Style;
 use std::{fmt::Debug, rc::Rc};
 
 /// `Element` trait object
@@ -51,7 +51,7 @@ impl Element for () {
 impl Element for char {
     /// `char` is 100% width, 100% height
     fn style(&self) -> Style {
-        Style::new().width(Percent(1.0)).height(Percent(1.0))
+        Style::new().width(1.0).height(1.0)
     }
 
     /// `char`'s content is this `char`
@@ -64,7 +64,7 @@ impl Element for char {
 impl Element for Rc<String> {
     /// `Rc<String>` is 100% width, 100% height
     fn style(&self) -> Style {
-        Style::new().width(Percent(1.0)).height(Percent(1.0))
+        Style::new().width(1.0).height(1.0)
     }
 
     /// `Rc<String>`'s content is this `Rc<String>`
