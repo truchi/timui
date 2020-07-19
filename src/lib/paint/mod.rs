@@ -1,6 +1,6 @@
 //! # `Paint` module
 //!
-//! TODO: document
+//! TODO document
 
 mod canvas;
 mod cell;

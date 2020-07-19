@@ -329,3 +329,153 @@ impl From<Size> for s::Size<s::Dimension> {
         }
     }
 }
+
+// ========================================================================= //
+//                                   TESTS                                   //
+// ========================================================================= //
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use pretty_assertions::{assert_eq, assert_ne};
+
+    #[test]
+    fn enums() {
+        assert_eq!(AlignContent::from(FlexStart), AlignContent::FlexStart);
+        assert_eq!(AlignContent::from(FlexEnd), AlignContent::FlexEnd);
+        assert_eq!(AlignContent::from(Center), AlignContent::Center);
+        assert_eq!(AlignContent::from(Stretch), AlignContent::Stretch);
+        assert_eq!(AlignContent::from(SpaceBetween), AlignContent::SpaceBetween);
+        assert_eq!(AlignContent::from(SpaceAround), AlignContent::SpaceAround);
+        assert_eq!(AlignItems::from(FlexStart), AlignItems::FlexStart);
+        assert_eq!(AlignItems::from(FlexEnd), AlignItems::FlexEnd);
+        assert_eq!(AlignItems::from(Center), AlignItems::Center);
+        assert_eq!(AlignItems::from(Baseline), AlignItems::Baseline);
+        assert_eq!(AlignItems::from(Stretch), AlignItems::Stretch);
+        assert_eq!(AlignSelf::from(Auto), AlignSelf::Auto);
+        assert_eq!(AlignSelf::from(FlexStart), AlignSelf::FlexStart);
+        assert_eq!(AlignSelf::from(FlexEnd), AlignSelf::FlexEnd);
+        assert_eq!(AlignSelf::from(Center), AlignSelf::Center);
+        assert_eq!(AlignSelf::from(Baseline), AlignSelf::Baseline);
+        assert_eq!(JustifyContent::from(FlexStart), JustifyContent::FlexStart);
+        assert_eq!(JustifyContent::from(FlexEnd), JustifyContent::FlexEnd);
+        assert_eq!(JustifyContent::from(Center), JustifyContent::Center);
+        assert_eq!(
+            JustifyContent::from(SpaceBetween),
+            JustifyContent::SpaceBetween
+        );
+        assert_eq!(
+            JustifyContent::from(SpaceAround),
+            JustifyContent::SpaceAround
+        );
+        assert_eq!(
+            JustifyContent::from(SpaceEvenly),
+            JustifyContent::SpaceEvenly
+        );
+    }
+
+    #[test]
+    fn number() {
+        assert_eq!(Number::from(()), Number::Undefined);
+        assert_eq!(Number::from(12), Number::Defined(12.));
+        assert_eq!(Number::from(13.1), Number::Defined(13.1));
+        assert_eq!(
+            s::Number::from(Number::Defined(14.5)),
+            s::Number::Defined(14.5)
+        );
+        assert_eq!(s::Number::from(Number::Undefined), s::Number::Undefined);
+    }
+
+    #[test]
+    fn dimension() {
+        assert_eq!(Dimension::from(()), Dimension::Undefined);
+        assert_eq!(Dimension::from(Auto), Dimension::Auto);
+        assert_eq!(Dimension::from(12), Dimension::Points(12));
+        assert_eq!(Dimension::from(13.1), Dimension::Percent(13.1));
+        assert_eq!(
+            s::Dimension::from(Dimension::Undefined),
+            s::Dimension::Undefined
+        );
+        assert_eq!(s::Dimension::from(Dimension::Auto), s::Dimension::Auto);
+        assert_eq!(
+            s::Dimension::from(Dimension::Points(13)),
+            s::Dimension::Points(13.)
+        );
+        assert_eq!(
+            s::Dimension::from(Dimension::Percent(0.2)),
+            s::Dimension::Percent(0.2)
+        );
+    }
+
+    #[test]
+    fn rect() {
+        assert_eq!(Rect::from(Dimension::Undefined), Rect {
+            start:  Dimension::Undefined,
+            end:    Dimension::Undefined,
+            top:    Dimension::Undefined,
+            bottom: Dimension::Undefined,
+        });
+        assert_eq!(
+            Rect::from((Dimension::Points(11), Dimension::Percent(10.8))),
+            Rect {
+                start:  Dimension::Points(11),
+                end:    Dimension::Points(11),
+                top:    Dimension::Percent(10.8),
+                bottom: Dimension::Percent(10.8),
+            }
+        );
+        assert_eq!(
+            Rect::from((
+                Dimension::Percent(4.7),
+                Dimension::Points(3),
+                Dimension::Auto,
+                Dimension::Undefined
+            )),
+            Rect {
+                start:  Dimension::Percent(4.7),
+                end:    Dimension::Points(3),
+                top:    Dimension::Auto,
+                bottom: Dimension::Undefined,
+            }
+        );
+        assert_eq!(
+            s::Rect::<s::Dimension>::from(Rect {
+                start:  Dimension::Undefined,
+                end:    Dimension::Auto,
+                top:    Dimension::Percent(1.2),
+                bottom: Dimension::Points(2),
+            }),
+            s::Rect::<s::Dimension> {
+                start:  s::Dimension::Undefined,
+                end:    s::Dimension::Auto,
+                top:    s::Dimension::Percent(1.2),
+                bottom: s::Dimension::Points(2.),
+            }
+        );
+    }
+
+    #[test]
+    fn size() {
+        assert_eq!(Size::from(Dimension::Undefined), Size {
+            width:  Dimension::Undefined,
+            height: Dimension::Undefined,
+        });
+        assert_eq!(
+            Size::from((Dimension::Points(6), Dimension::Percent(3.3))),
+            Size {
+                width:  Dimension::Points(6),
+                height: Dimension::Percent(3.3),
+            }
+        );
+        assert_eq!(
+            s::Size::<s::Dimension>::from(Size {
+                width:  Dimension::Percent(3.9),
+                height: Dimension::Points(4),
+            }),
+            s::Size::<s::Dimension> {
+                width:  s::Dimension::Percent(3.9),
+                height: s::Dimension::Points(4.),
+            }
+        );
+    }
+}

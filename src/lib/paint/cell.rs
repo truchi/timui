@@ -1,10 +1,8 @@
-//! # `Cell`
-
 use crate::style::{Color, ColorStyle};
 use std::fmt::{Display, Error, Formatter};
 
 /// A terminal cell
-#[derive(Copy, Clone, Default, Debug)]
+#[derive(Copy, Clone, PartialEq, Default, Debug)]
 pub struct Cell {
     /// The char
     pub c:          char,

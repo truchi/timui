@@ -38,8 +38,6 @@ pub enum Color {
     LightWhite,
     /// Light yellow,
     LightYellow,
-    /* Rgb { r: u8, g: u8, b: u8 },
-     * Rgba { r: u8, g: u8, b: u8, a: u8 }, */
 }
 
 impl Default for Color {
@@ -101,18 +99,18 @@ mod tests {
     use pretty_assertions::{assert_eq, assert_ne};
 
     #[test]
-    fn transparent_is_default() {
+    fn default() {
         assert_eq!(Color::default(), Color::Transparent);
     }
 
     #[test]
-    fn transparent_has_no_escape_sequences() {
+    fn transparent() {
         assert_eq!(Color::Transparent.fg_str(), "");
         assert_eq!(Color::Transparent.bg_str(), "");
     }
 
     #[test]
-    fn colors_have_correct_escape_sequences() {
+    fn colors() {
         assert_eq!(Color::Red.fg_str(), termion::color::Red.fg_str());
         assert_eq!(Color::Red.bg_str(), termion::color::Red.bg_str());
 
