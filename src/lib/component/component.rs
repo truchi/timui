@@ -1,5 +1,3 @@
-//! # `Component`
-
 use super::Elements;
 use crate::style::Style;
 use std::fmt::Debug;

@@ -1,5 +1,3 @@
-//! # `Style`
-
 use super::{color::Color, color_style::ColorStyle, layout_style::*};
 
 /// # `Style`

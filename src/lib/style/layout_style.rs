@@ -1,5 +1,3 @@
-//! # Re-exports from [`stretch`](https://docs.rs/stretch/latest/stretch/index.html)
-
 /// Re-export from [`stretch::style::AlignContent`](https://docs.rs/stretch/latest/stretch/style/enum.AlignContent.html)
 pub use stretch::style::AlignContent;
 /// Re-export from [`stretch::style::AlignItems`](https://docs.rs/stretch/latest/stretch/style/enum.AlignItems.html)

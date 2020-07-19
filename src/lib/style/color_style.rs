@@ -1,9 +1,9 @@
-//! # `ColorStyle`
-
 use super::Color;
 use std::fmt::{Display, Error, Formatter};
 
-/// Represents color-related styles of a `Component`. `None` will inherit.
+/// Visual (non-layout) styles of a `Component`.
+///
+/// `None` will inherit.
 #[derive(Copy, Clone, PartialEq, Default, Debug)]
 pub struct ColorStyle {
     /// Foreground `Color`

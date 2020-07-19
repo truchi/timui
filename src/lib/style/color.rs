@@ -1,9 +1,7 @@
-//! # `Color`
-
-/// `Color`
+/// A `Color`
 ///
-/// Represents a terminal color. Defaults to `Transparent`. Convertible to
-/// terminal escape sequence thanks to `termion`. No alpha (for now).
+/// Defaults to `Transparent`. Convertible to terminal escape sequence thanks to
+/// `termion`. No alpha (for now).
 #[derive(Clone, Copy, PartialEq, Debug)]
 pub enum Color {
     /// Transparent,
