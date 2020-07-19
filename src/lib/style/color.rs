@@ -1,11 +1,8 @@
 /// A `Color`
 ///
-/// Defaults to `Transparent`. Convertible to terminal escape sequence thanks to
-/// `termion`. No alpha (for now).
+/// Convertible to terminal escape sequence thanks to [`termion`](https://docs.rs/termion/latest/termion/).
 #[derive(Clone, Copy, PartialEq, Debug)]
 pub enum Color {
-    /// Transparent,
-    Transparent,
     /// Black,
     Black,
     /// Blue,
@@ -40,13 +37,6 @@ pub enum Color {
     LightYellow,
 }
 
-impl Default for Color {
-    /// `Color::Transparent`
-    fn default() -> Self {
-        Self::Transparent
-    }
-}
-
 /// Macro for `Color` methods
 macro_rules! derive_colors {
     ($($color:ident,)*) => {
@@ -54,7 +44,6 @@ macro_rules! derive_colors {
             /// Returns the foreground escape sequence for this `Color`
             pub fn fg_str(&self) -> &'static str {
                 match self {
-                    Self::Transparent => "",
                     $(Self::$color => termion::color::$color.fg_str(),)*
                 }
             }
@@ -62,7 +51,6 @@ macro_rules! derive_colors {
             /// Returns the background escape sequence for this `Color`
             pub fn bg_str(&self) -> &'static str {
                 match self {
-                    Self::Transparent => "",
                     $(Self::$color => termion::color::$color.bg_str(),)*
                 }
             }
@@ -95,19 +83,8 @@ derive_colors!(
 
 #[cfg(test)]
 mod tests {
-    use super::Color;
+    use super::*;
     use pretty_assertions::{assert_eq, assert_ne};
-
-    #[test]
-    fn default() {
-        assert_eq!(Color::default(), Color::Transparent);
-    }
-
-    #[test]
-    fn transparent() {
-        assert_eq!(Color::Transparent.fg_str(), "");
-        assert_eq!(Color::Transparent.bg_str(), "");
-    }
 
     #[test]
     fn colors() {
