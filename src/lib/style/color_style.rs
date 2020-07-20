@@ -1,5 +1,6 @@
 use super::Color;
 use std::fmt::{Display, Error, Formatter};
+use termion::style::*;
 
 /// Visual (non-layout) styles of a `Component`.
 ///
@@ -49,37 +50,32 @@ impl ColorStyle {
     }
 }
 
-macro_rules! str {
-    ($self:ident foreground) => {{
-        $self.foreground.map_or("", |c| c.fg_str())
-    }};
-    ($self:ident background) => {{
-        $self.background.map_or("", |c| c.bg_str())
-    }};
-    ($self:ident $str:ident) => {{
-        $self.$str.map_or("", |x| str!(impl x $str))
-    }};
-    (impl $prop:ident bold) => {{ str!(impl $prop, Bold, NoBold) }};
-    (impl $prop:ident italic) => {{ str!(impl $prop, Italic, NoItalic) }};
-    (impl $prop:ident underline) => {{ str!(impl $prop, Underline, NoUnderline) }};
-    (impl $prop:ident, $Attr:ident, $NoAttr:ident) => {{
-        if $prop { str!(impl impl $Attr) } else { str!(impl impl $NoAttr) }
-    }};
-    (impl impl $Attr:ident) => {{
-        <termion::style::$Attr as AsRef<str>>::as_ref(&termion::style::$Attr)
-    }};
+macro_rules! strs {
+    ($prop:ident : $Attr:ident, $NoAttr:ident) => {
+        fn $prop(color_style: &ColorStyle) -> &'static str {
+            match color_style.$prop {
+                Some(true) => <$Attr as AsRef<str>>::as_ref(&$Attr),
+                Some(false) => <$NoAttr as AsRef<str>>::as_ref(&$NoAttr),
+                None => "",
+            }
+        }
+    };
 }
+
+strs!(bold: Bold, NoBold);
+strs!(italic: Italic, NoItalic);
+strs!(underline: Underline, NoUnderline);
 
 impl Display for ColorStyle {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
         write!(
             f,
             "{}{}{}{}{}",
-            str!(self foreground),
-            str!(self background),
-            str!(self bold),
-            str!(self italic),
-            str!(self underline),
+            self.foreground.map_or("", |c| c.fg_str()),
+            self.background.map_or("", |c| c.bg_str()),
+            bold(self),
+            italic(self),
+            underline(self),
         )
     }
 }
