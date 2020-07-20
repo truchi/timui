@@ -12,12 +12,8 @@ impl Rect {
     pub fn clip(&self, clip: &Self) -> Self {
         let x = clamp(clip.x, self.x, self.x + self.w);
         let y = clamp(clip.y, self.y, self.y + self.h);
-        let x2 = clamp(clip.x + clip.w, self.x, self.x + self.w);
-        let y2 = clamp(clip.y + clip.h, self.y, self.y + self.h);
-        debug_assert!(x2 >= x);
-        debug_assert!(y2 >= y);
-        let w = x2 - x;
-        let h = y2 - y;
+        let w = clamp(clip.x + clip.w, self.x, self.x + self.w) - x;
+        let h = clamp(clip.y + clip.h, self.y, self.y + self.h) - y;
 
         Rect { x, y, w, h }
     }

@@ -1,150 +1,113 @@
 //! # `Canvas`
 
-use super::{Cell, Layer};
+use super::{Cell, Layer, Rect};
 use crate::style::{Color, ColorStyle};
 use std::{
     fmt::{Display, Error, Formatter},
     rc::Rc,
 };
-use stretch::result::Layout;
 
 /// A positioned rectangle of `Cell`s
 #[derive(Default, Debug)]
 pub struct Canvas {
-    /// Horizontal distance from origin
-    x:      usize,
-    /// Vertical distance from origin
-    y:      usize,
-    /// Width
-    width:  usize,
-    /// Height
-    height: usize,
-    /// `Cell`s
-    vec:    Vec<Cell>,
+    /// The `Rect` bounds of the `Layer`
+    rect: Rect,
+    /// The `Cell`s filling the `Layer`
+    vec:  Vec<Cell>,
 }
 
 impl Layer for Canvas {
-    fn x(&self) -> usize {
-        self.x
+    fn rect(&self) -> Rect {
+        self.rect
     }
 
-    fn y(&self) -> usize {
-        self.y
+    fn get(&self, x: u16, y: u16) -> &Cell {
+        debug(self.rect, x, y);
+        self.vec.get((self.rect.w * y + x) as usize).unwrap()
     }
 
-    fn width(&self) -> usize {
-        self.width
-    }
-
-    fn height(&self) -> usize {
-        self.height
-    }
-
-    fn get(&self, x: usize, y: usize) -> &Cell {
-        self.vec.get(self.width * y + x).unwrap()
-    }
-
-    fn get_mut(&mut self, x: usize, y: usize) -> &mut Cell {
-        self.vec.get_mut(self.width * y + x).unwrap()
+    fn get_mut(&mut self, x: u16, y: u16) -> &mut Cell {
+        debug(self.rect, x, y);
+        self.vec.get_mut((self.rect.w * y + x) as usize).unwrap()
     }
 }
 
 impl Canvas {
     /// Creates a `Canvas` filled with `color`ed background `Cell`s
-    pub fn with_background(x: usize, y: usize, width: usize, height: usize, color: Color) -> Self {
-        let mut vec = Vec::with_capacity(width * height);
+    pub fn with_background(rect: impl Into<Rect>, color: Color) -> Self {
+        let rect = rect.into();
+        let mut vec = Vec::with_capacity((rect.w * rect.h) as usize);
 
-        for _ in 0..(width * height) {
+        for _ in 0..(rect.w * rect.h) {
             vec.push(Cell::with_background(color));
         }
 
-        Self {
-            x,
-            y,
-            width,
-            height,
-            vec,
-        }
+        Self { rect, vec }
     }
 
     /// Merges `above` above this `Canvas`
     pub fn above(&mut self, above: &impl Layer) {
-        let (x, y, w, h) = self.intersect(above);
-        let dx = x - self.x;
-        let dy = y - self.y;
+        let Rect { x, y, w, h } = self.rect.clip(&above.rect());
+        let dx = x - self.rect.x;
+        let dy = y - self.rect.y;
 
         for i in 0..w {
             for j in 0..h {
                 let cell = self.get_mut(i + dx, j + dy);
-                *cell = cell.above(&above.get(i, j));
+                *cell = Cell::merge(cell, &above.get(i, j));
             }
         }
     }
 
     /// Merges `below` below this `Canvas`
     pub fn below(&mut self, below: &impl Layer) {
-        let (x, y, w, h) = self.intersect(below);
-        let dx = x - self.x;
-        let dy = y - self.y;
+        let Rect { x, y, w, h } = self.rect.clip(&below.rect());
+        let dx = x - self.rect.x;
+        let dy = y - self.rect.y;
 
         for i in 0..w {
             for j in 0..h {
                 let cell = self.get_mut(i + dx, j + dy);
-                let above = below.get(i, j);
-                let merged = cell.below(&above);
-                *cell = merged;
+                *cell = Cell::merge(&below.get(i, j), cell);
             }
         }
     }
 }
 
-impl From<(Layout, ColorStyle, char)> for Canvas {
-    fn from((layout, mut style, c): (Layout, ColorStyle, char)) -> Self {
-        style.background = Color::Transparent; // TODO from caller
-
+impl<T: Into<Rect>> From<(T, Cell)> for Canvas {
+    fn from((rect, cell): (T, Cell)) -> Self {
         Self {
-            x:      layout.location.x as usize,
-            y:      layout.location.y as usize,
-            width:  1,
-            height: 1,
-            vec:    vec![(style, c).into()],
+            rect: rect.into(),
+            vec:  vec![cell],
         }
     }
 }
 
-impl From<(Layout, ColorStyle, Rc<String>)> for Canvas {
-    fn from((layout, mut style, s): (Layout, ColorStyle, Rc<String>)) -> Self {
-        style.background = Color::Transparent; // TODO from caller
-
-        let x = layout.location.x as usize;
-        let y = layout.location.y as usize;
-        let width = layout.size.width as usize;
-        let height = layout.size.height as usize;
-        let mut vec = Vec::with_capacity(width * height);
+impl<T: Into<Rect>> From<(T, ColorStyle, Rc<String>)> for Canvas {
+    fn from((rect, style, string): (T, ColorStyle, Rc<String>)) -> Self {
+        let empty = Cell::new(' ', style);
+        let rect = rect.into();
+        let width = rect.w as usize;
+        let height = rect.w as usize;
         let strs = textwrap::Wrapper::new(width)
             .break_words(false)
-            .wrap(&s[..]);
-        let len = strs.len();
+            .wrap(&string[..]);
+        let lines = strs.len();
 
-        for (_, s) in strs.iter().enumerate() {
-            let len = s.len();
-            let cells = s
-                .chars() // TODO Not 'real' chars
-                .map(|c| Cell::from((style, c)));
+        let mut vec = Vec::with_capacity(width * height);
+        for str in strs.iter() {
+            let len = str.len();
+            let cells = str
+                .chars() // TODO Not "real" chars
+                .map(|char| Cell::new(char, style));
 
             cells.for_each(|cell| vec.push(cell));
-            (len..width).for_each(|_| vec.push(Default::default()));
+            (len..width).for_each(|_| vec.push(empty));
         }
 
-        (width * len..width * height).for_each(|_| vec.push(Default::default()));
+        (width * lines..width * height).for_each(|_| vec.push(empty));
 
-        Self {
-            x,
-            y,
-            width,
-            height,
-            vec,
-        }
+        Self { rect, vec }
     }
 }
 
@@ -154,4 +117,21 @@ impl Display for Canvas {
             cell.fmt(f).unwrap();
         })
     }
+}
+
+fn debug(rect: Rect, x: u16, y: u16) {
+    debug_assert!(x >= rect.x, "`x` ({}) must be >= `rect.x` ({})", x, rect.x);
+    debug_assert!(
+        x <= rect.x + rect.w,
+        "`x` ({}) must be <= `rect.x + rect.w` ({})",
+        x,
+        rect.x + rect.w
+    );
+    debug_assert!(y >= rect.y, "`y` ({}) must be >= `rect.y` ({})", y, rect.y);
+    debug_assert!(
+        y <= rect.y + rect.h,
+        "`y` ({}) must be <= `rect.y + rect.h` ({})",
+        y,
+        rect.y + rect.h
+    );
 }

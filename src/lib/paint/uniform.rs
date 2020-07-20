@@ -20,6 +20,10 @@ impl Uniform {
 }
 
 impl Layer for Uniform {
+    fn rect(&self) -> Rect {
+        self.rect
+    }
+
     fn get(&self, _: u16, _: u16) -> &Cell {
         &self.cell
     }
