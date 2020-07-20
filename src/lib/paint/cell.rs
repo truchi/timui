@@ -1,111 +1,196 @@
 use crate::style::{Color, ColorStyle};
 use std::fmt::{Display, Error, Formatter};
 
-/// A terminal cell
+/// A terminal `Cell`. Holds a `char` and `ColorStyle`.
 #[derive(Copy, Clone, PartialEq, Default, Debug)]
 pub struct Cell {
-    /// The char
-    pub c:          char,
-    /// Foreground color
-    pub foreground: Color,
-    /// Background color
-    pub background: Color,
-    /// Wether char is bold
-    pub bold:       bool,
-    /// Wether char is italic
-    pub italic:     bool,
-    /// Wether char is underlined
-    pub underline:  bool,
+    /// The `char`
+    char:  char,
+    /// Styles
+    style: ColorStyle,
 }
 
 impl Cell {
-    /// Creates an 'empty' (transparent foreground, no char) `Cell` with
-    /// `background` color
+    /// Creates a `Cell`
+    pub fn new(char: char, style: ColorStyle) -> Self {
+        Self { char, style }
+    }
+
+    /// Creates a default `Cell` with `background` color
     pub fn with_background(background: Color) -> Self {
         Self {
-            foreground: Color::Transparent,
-            background,
-            bold: false,
-            italic: false,
-            underline: false,
-            c: ' ',
+            char:  ' ',
+            style: ColorStyle::with_background(background),
         }
     }
 
-    /// Merges `above` above this `Cell`
-    pub fn above(&self, above: &Self) -> Self {
-        let mut merged = *self;
-
-        if above.background != Color::Transparent {
-            merged.background = above.background;
-        };
-
-        if above.c != ' ' && above.foreground != Color::Transparent {
-            merged.foreground = above.foreground;
-            merged.bold = above.bold;
-            merged.italic = above.italic;
-            merged.underline = above.underline;
-            merged.c = above.c;
+    pub fn merge(below: &Self, above: &Self) -> Self {
+        if above.has_background() {
+            return *above;
         }
 
-        merged
-    }
+        if above.has_foreground() {
+            let mut merged = *above;
+            merged.style.background = below.style.background;
 
-    /// Merges `below` below this `Cell`
-    pub fn below(&self, below: &Self) -> Self {
-        below.above(self)
-    }
-}
-
-impl From<(ColorStyle, char)> for Cell {
-    fn from((style, c): (ColorStyle, char)) -> Self {
-        Self {
-            foreground: style.foreground,
-            background: style.background,
-            bold: style.bold,
-            italic: style.italic,
-            underline: style.underline,
-            c,
+            return merged;
         }
+
+        *below
+    }
+
+    pub fn has_foreground(&self) -> bool {
+        self.char != ' ' && self.style.foreground.is_some()
+    }
+
+    pub fn has_background(&self) -> bool {
+        self.style.background.is_some()
     }
 }
 
 impl Display for Cell {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
-        use termion::style;
+        write!(f, "{}{}", self.style, self.char)
+    }
+}
 
-        let foreground = self.foreground.fg_str();
-        let background = if self.background == Color::Transparent {
-            Color::Black
-        } else {
-            self.background
-        }
-        .bg_str();
-        let bold = if self.bold {
-            <style::Bold as AsRef<str>>::as_ref(&style::Bold)
-        } else {
-            <style::NoBold as AsRef<str>>::as_ref(&style::NoBold)
+// ========================================================================= //
+//                                   TESTS                                   //
+// ========================================================================= //
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use pretty_assertions::{assert_eq, assert_ne};
+
+    #[test]
+    fn has_foreground() {
+        assert_eq!(
+            Cell {
+                char:  ' ',
+                style: ColorStyle {
+                    foreground: None,
+                    ..Default::default()
+                },
+            }
+            .has_foreground(),
+            false
+        );
+        assert_eq!(
+            Cell {
+                char:  'a',
+                style: ColorStyle {
+                    foreground: None,
+                    ..Default::default()
+                },
+            }
+            .has_foreground(),
+            false
+        );
+        assert_eq!(
+            Cell {
+                char:  ' ',
+                style: ColorStyle {
+                    foreground: Some(Color::Red),
+                    ..Default::default()
+                },
+            }
+            .has_foreground(),
+            false
+        );
+        assert_eq!(
+            Cell {
+                char:  'a',
+                style: ColorStyle {
+                    foreground: Some(Color::Green),
+                    ..Default::default()
+                },
+            }
+            .has_foreground(),
+            true
+        );
+    }
+
+    #[test]
+    fn has_background() {
+        assert_eq!(
+            Cell {
+                char:  'a',
+                style: ColorStyle {
+                    background: Some(Color::Green),
+                    ..Default::default()
+                },
+            }
+            .has_background(),
+            true
+        );
+        assert_eq!(
+            Cell {
+                char:  'b',
+                style: ColorStyle {
+                    background: None,
+                    ..Default::default()
+                },
+            }
+            .has_background(),
+            false
+        );
+    }
+
+    #[test]
+    fn merge() {
+        let below = Cell {
+            char:  'z',
+            style: ColorStyle {
+                foreground: Some(Color::Red),
+                background: Some(Color::Green),
+                ..Default::default()
+            },
         };
-        let italic = if self.italic {
-            <style::Italic as AsRef<str>>::as_ref(&style::Italic)
-        } else {
-            <style::NoItalic as AsRef<str>>::as_ref(&style::NoItalic)
-        };
-        let underline = if self.underline {
-            <style::Underline as AsRef<str>>::as_ref(&style::Underline)
-        } else {
-            <style::NoUnderline as AsRef<str>>::as_ref(&style::NoUnderline)
-        };
-        let c = if self.foreground == Color::Transparent {
-            ' '
-        } else {
-            self.c
+        let has_background = Cell {
+            char:  ' ',
+            style: ColorStyle {
+                background: Some(Color::Green),
+                ..Default::default()
+            },
         };
 
-        write!(
-            f,
-            "{}{}{}{}{}{}",
-            foreground, background, bold, italic, underline, c
-        )
+        assert_eq!(
+            Cell::merge(&below, &has_background),
+            has_background,
+            "Merged is same as above when above has background"
+        );
+
+        let has_foreground = Cell {
+            char:  'r',
+            style: ColorStyle {
+                foreground: Some(Color::Blue),
+                ..Default::default()
+            },
+        };
+
+        assert_eq!(
+            Cell::merge(&below, &has_foreground).style.background,
+            below.style.background,
+            "Merged has below's background when above has no background"
+        );
+        assert_eq!(
+            {
+                let mut merged = Cell::merge(&below, &has_foreground);
+                merged.style.background = has_foreground.style.background;
+
+                merged
+            },
+            has_foreground,
+            "Merged is same as above (except for background) when above has no background"
+        );
+
+        let default: Cell = Default::default();
+
+        assert_eq!(
+            Cell::merge(&below, &default),
+            below,
+            "Merged is same as below when above has neither foreground nor background"
+        );
     }
 }

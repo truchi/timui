@@ -19,8 +19,16 @@ pub struct ColorStyle {
 }
 
 impl ColorStyle {
-    /// Sets fields to None if the values are identical to the ones found in
-    /// `before`
+    /// Creates a default `ColorStyle` with `background` color
+    pub fn with_background(background: Color) -> Self {
+        Self {
+            background: Some(background),
+            ..Default::default()
+        }
+    }
+
+    /// Sets fields to None if the values are identical to the corresponding
+    /// ones in `before`
     pub fn simplify(&self, before: &Self) -> Self {
         macro_rules! simplify {
             ($prop:ident) => {{
@@ -82,7 +90,7 @@ impl Display for ColorStyle {
 
 #[cfg(test)]
 mod tests {
-    use super::{Color, ColorStyle};
+    use super::*;
     use pretty_assertions::{assert_eq, assert_ne};
 
     #[test]
