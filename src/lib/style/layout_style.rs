@@ -157,7 +157,7 @@ impl From<Number> for s::Number {
 pub enum Dimension {
     Undefined,
     Auto,
-    Points(u16),
+    Points(i16),
     Percent(f32),
 }
 
@@ -182,9 +182,9 @@ impl From<Auto> for Dimension {
     }
 }
 
-/// `u16` is `Dimension::Points(u16)`
-impl From<u16> for Dimension {
-    fn from(points: u16) -> Self {
+/// `i16` is `Dimension::Points(i16)`
+impl From<i16> for Dimension {
+    fn from(points: i16) -> Self {
         Self::Points(points)
     }
 }
