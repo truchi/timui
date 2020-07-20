@@ -76,10 +76,19 @@ impl Canvas {
 
 impl<T: Into<Rect>> From<(T, Cell)> for Canvas {
     fn from((rect, cell): (T, Cell)) -> Self {
-        Self {
-            rect: rect.into(),
-            vec:  vec![cell],
+        let empty = Cell::new(' ', cell.style);
+        let rect = rect.into();
+        let width = rect.w as usize;
+        let height = rect.h as usize;
+        let size = width * height;
+
+        let mut vec = Vec::with_capacity(size);
+        if size > 0 {
+            vec.push(cell);
+            (1..size).for_each(|_| vec.push(empty));
         }
+
+        Self { rect, vec }
     }
 }
 
@@ -89,12 +98,13 @@ impl<T: Into<Rect>> From<(T, ColorStyle, Rc<String>)> for Canvas {
         let rect = rect.into();
         let width = rect.w as usize;
         let height = rect.w as usize;
+        let size = width * height;
         let strs = textwrap::Wrapper::new(width)
             .break_words(false)
             .wrap(&string[..]);
         let lines = strs.len();
 
-        let mut vec = Vec::with_capacity(width * height);
+        let mut vec = Vec::with_capacity(size);
         for str in strs.iter() {
             let len = str.len();
             let cells = str
@@ -105,7 +115,7 @@ impl<T: Into<Rect>> From<(T, ColorStyle, Rc<String>)> for Canvas {
             (len..width).for_each(|_| vec.push(empty));
         }
 
-        (width * lines..width * height).for_each(|_| vec.push(empty));
+        (width * lines..size).for_each(|_| vec.push(empty));
 
         Self { rect, vec }
     }
@@ -134,4 +144,79 @@ fn debug(rect: Rect, x: u16, y: u16) {
         y,
         rect.y + rect.h
     );
+}
+
+// ========================================================================= //
+//                                   TESTS                                   //
+// ========================================================================= //
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use pretty_assertions::{assert_eq, assert_ne};
+
+    fn canvas() -> (Vec<Cell>, Canvas, Canvas) {
+        let bottom = Cell::new(' ', ColorStyle {
+            background: Some(Color::Black),
+            ..Default::default()
+        });
+        let red_background = Cell::new(' ', ColorStyle {
+            background: Some(Color::Red),
+            ..Default::default()
+        });
+        let green_foreground = Cell::new('a', ColorStyle {
+            foreground: Some(Color::Green),
+            ..Default::default()
+        });
+        let default = Default::default();
+
+        let expected = vec![
+            red_background,
+            {
+                let mut cell = *&green_foreground;
+                cell.style.background = Some(Color::Black);
+                cell
+            },
+            bottom,
+            bottom,
+        ];
+
+        (
+            expected,
+            Canvas {
+                rect: (0, 0, 4, 1).into(),
+                vec:  [bottom; 4].into(),
+            },
+            Canvas {
+                rect: (0, 0, 3, 1).into(),
+                vec:  vec![red_background, green_foreground, default],
+            },
+        )
+    }
+
+    #[test]
+    fn above() {
+        let (expected, mut below, above) = canvas();
+
+        assert_eq!(
+            {
+                below.above(&above);
+                below.vec
+            },
+            expected
+        );
+    }
+
+    #[test]
+    fn below() {
+        let (expected, below, mut above) = canvas();
+
+        assert_eq!(
+            {
+                above.below(&below);
+                above.vec
+            },
+            &expected[..3]
+        );
+    }
 }

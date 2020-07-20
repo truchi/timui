@@ -2,12 +2,12 @@ use crate::style::{Color, ColorStyle};
 use std::fmt::{Display, Error, Formatter};
 
 /// A terminal `Cell`. Holds a `char` and `ColorStyle`.
-#[derive(Copy, Clone, PartialEq, Default, Debug)]
+#[derive(Copy, Clone, PartialEq, Debug)]
 pub struct Cell {
     /// The `char`
-    char:  char,
+    pub char:  char,
     /// Styles
-    style: ColorStyle,
+    pub style: ColorStyle,
 }
 
 impl Cell {
@@ -45,6 +45,15 @@ impl Cell {
 
     pub fn has_background(&self) -> bool {
         self.style.background.is_some()
+    }
+}
+
+impl Default for Cell {
+    fn default() -> Self {
+        Self {
+            char:  ' ',
+            style: Default::default(),
+        }
     }
 }
 
