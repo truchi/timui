@@ -1,4 +1,5 @@
 use super::{Cell, Layer, Rect};
+use crate::style::ColorStyle;
 
 /// A uniform `Layer`: same cell all over the layer
 #[derive(Default, Debug)]
@@ -7,16 +8,6 @@ pub struct Uniform {
     rect: Rect,
     /// The `Cell` filling the `Layer`
     cell: Cell,
-}
-
-impl Uniform {
-    /// Creates a `Uniform`
-    pub fn new(rect: impl Into<Rect>, cell: Cell) -> Self {
-        Self {
-            rect: rect.into(),
-            cell,
-        }
-    }
 }
 
 impl Layer for Uniform {
@@ -32,5 +23,18 @@ impl Layer for Uniform {
     /// Returns `cell`, ignores arguments
     fn get_mut(&mut self, _: u16, _: u16) -> &mut Cell {
         &mut self.cell
+    }
+}
+
+/// Creates a `Uniform`
+impl<T: Into<Rect>> From<(T, char, ColorStyle)> for Uniform {
+    fn from((rect, char, style): (T, char, ColorStyle)) -> Self {
+        let rect = rect.into();
+        let cell = (char, style).into();
+
+        Self {
+            rect: rect.into(),
+            cell,
+        }
     }
 }
