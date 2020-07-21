@@ -66,6 +66,7 @@ strs!(bold: Bold, NoBold);
 strs!(italic: Italic, NoItalic);
 strs!(underline: Underline, NoUnderline);
 
+/// Prints `ColorStyle` escape sequences
 impl Display for ColorStyle {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
         write!(

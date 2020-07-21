@@ -16,26 +16,6 @@ pub struct Canvas {
     vec:  Vec<Cell>,
 }
 
-impl Layer for Canvas {
-    fn rect(&self) -> Rect {
-        self.rect
-    }
-
-    fn get(&self, x: u16, y: u16) -> &Cell {
-        debug(self.rect, x, y);
-        self.vec
-            .get((self.rect.w * y + x) as usize)
-            .expect("x and/or y out of bounds")
-    }
-
-    fn get_mut(&mut self, x: u16, y: u16) -> &mut Cell {
-        debug(self.rect, x, y);
-        self.vec
-            .get_mut((self.rect.w * y + x) as usize)
-            .expect("x and/or y out of bounds")
-    }
-}
-
 impl Canvas {
     /// Creates a `Canvas` filled with `color`ed background `Cell`s
     pub fn with_background(rect: impl Into<Rect>, color: Color) -> Self {
@@ -78,27 +58,47 @@ impl Canvas {
     }
 }
 
+impl Layer for Canvas {
+    fn rect(&self) -> Rect {
+        self.rect
+    }
+
+    fn get(&self, x: u16, y: u16) -> &Cell {
+        debug(self.rect, x, y);
+        self.vec
+            .get((self.rect.w * y + x) as usize)
+            .expect("x and/or y out of bounds")
+    }
+
+    fn get_mut(&mut self, x: u16, y: u16) -> &mut Cell {
+        debug(self.rect, x, y);
+        self.vec
+            .get_mut((self.rect.w * y + x) as usize)
+            .expect("x and/or y out of bounds")
+    }
+}
+
+/// Creates a `Canvas` with its first `Cell` as `cell` followed by spaced
+/// `cell`.
 impl<T: Into<Rect>> From<(T, Cell)> for Canvas {
     fn from((rect, cell): (T, Cell)) -> Self {
-        let empty = Cell::new(' ', cell.style);
         let rect = rect.into();
-        let width = rect.w as usize;
-        let height = rect.h as usize;
-        let size = width * height;
+        let size = rect.w as usize * rect.h as usize;
 
         let mut vec = Vec::with_capacity(size);
         if size > 0 {
             vec.push(cell);
-            (1..size).for_each(|_| vec.push(empty));
+            (1..size).for_each(|_| vec.push(cell.space()));
         }
 
         Self { rect, vec }
     }
 }
 
+/// Creates a `Canvas` with `string` wrapped to the provided width.
+/// Empty cells filled with spaced `style`.
 impl<T: Into<Rect>> From<(T, ColorStyle, Rc<String>)> for Canvas {
     fn from((rect, style, string): (T, ColorStyle, Rc<String>)) -> Self {
-        let empty = Cell::new(' ', style);
         let rect = rect.into();
         let width = rect.w as usize;
         let height = rect.w as usize;
@@ -116,15 +116,16 @@ impl<T: Into<Rect>> From<(T, ColorStyle, Rc<String>)> for Canvas {
                 .map(|char| Cell::new(char, style));
 
             cells.for_each(|cell| vec.push(cell));
-            (len..width).for_each(|_| vec.push(empty));
+            (len..width).for_each(|_| vec.push(style.into()));
         }
 
-        (width * lines..size).for_each(|_| vec.push(empty));
+        (width * lines..size).for_each(|_| vec.push(style.into()));
 
         Self { rect, vec }
     }
 }
 
+/// Prints the `Canvas` to the terminal
 impl Display for Canvas {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
         Ok(for cell in self.vec.iter() {

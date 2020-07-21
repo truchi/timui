@@ -24,30 +24,46 @@ impl Cell {
         }
     }
 
+    /// Copies `self` with a space for `char`
+    pub fn space(&self) -> Self {
+        Cell::new(' ', self.style)
+    }
+
+    /// Whether `Cell` has a visible foreground
+    pub fn has_foreground(&self) -> bool {
+        self.char != ' ' && self.style.foreground.is_some()
+    }
+
+    /// Whether `Cell` has a visible background
+    pub fn has_background(&self) -> bool {
+        self.style.background.is_some()
+    }
+
+    /// Merges `below` and `above`.
+    /// When `above` has a background `Color`, all we see is `above`.
+    /// When above has no background `Color` but a `char` and a foreground
+    /// `Color`, we see `above` with `below`'s background.
+    /// Otherwise we see `below`.
     pub fn merge(below: &Self, above: &Self) -> Self {
         if above.has_background() {
+            // Cannot see through `above`
             return *above;
         }
 
         if above.has_foreground() {
+            // See through `above`'s backgroung
             let mut merged = *above;
             merged.style.background = below.style.background;
 
             return merged;
         }
 
+        // `above` is invisible
         *below
-    }
-
-    pub fn has_foreground(&self) -> bool {
-        self.char != ' ' && self.style.foreground.is_some()
-    }
-
-    pub fn has_background(&self) -> bool {
-        self.style.background.is_some()
     }
 }
 
+/// A `Cell` with ' ' for `char` and `Default` `ColorStyle`
 impl Default for Cell {
     fn default() -> Self {
         Self {
@@ -57,6 +73,14 @@ impl Default for Cell {
     }
 }
 
+/// A `Cell` with ' ' for `char`
+impl From<ColorStyle> for Cell {
+    fn from(style: ColorStyle) -> Self {
+        Cell::new(' ', style)
+    }
+}
+
+/// Prints the `char` with `ColorStyle` escape sequences
 impl Display for Cell {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
         write!(f, "{}{}", self.style, self.char)
