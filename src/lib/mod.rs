@@ -12,4 +12,5 @@ pub mod paint;
 // pub mod render;
 pub mod style;
 // pub mod ui;
+#[allow(dead_code)]
 mod utils;
