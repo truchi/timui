@@ -1,5 +1,4 @@
 use super::{Cell, Layer, Rect};
-use crate::style::ColorStyle;
 
 /// A uniform `Layer`: same cell all over the layer
 #[derive(Default, Debug)]
@@ -27,10 +26,9 @@ impl Layer for Uniform {
 }
 
 /// Creates a `Uniform`
-impl<T: Into<Rect>> From<(T, char, ColorStyle)> for Uniform {
-    fn from((rect, char, style): (T, char, ColorStyle)) -> Self {
+impl<T: Into<Rect>> From<(T, Cell)> for Uniform {
+    fn from((rect, cell): (T, Cell)) -> Self {
         let rect = rect.into();
-        let cell = (char, style).into();
 
         Self {
             rect: rect.into(),
