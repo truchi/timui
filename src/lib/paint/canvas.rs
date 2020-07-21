@@ -64,16 +64,18 @@ impl Layer for Canvas {
     /// PANICS when `x` and/or `y` out of `rect`'s
     fn get(&self, x: u16, y: u16) -> &Cell {
         debug(self.rect, x, y);
-        self.cells
-            .get((self.rect.w * y + x) as usize)
-            .expect("x and/or y out of bounds")
+
+        let (x, y, w) = (x as usize, y as usize, self.rect.w as usize);
+        self.cells.get(w * y + x).expect("x and/or y out of bounds")
     }
 
     /// PANICS when `x` and/or `y` out of `rect`'s
     fn get_mut(&mut self, x: u16, y: u16) -> &mut Cell {
         debug(self.rect, x, y);
+
+        let (x, y, w) = (x as usize, y as usize, self.rect.w as usize);
         self.cells
-            .get_mut((self.rect.w * y + x) as usize)
+            .get_mut(w * y + x)
             .expect("x and/or y out of bounds")
     }
 }
@@ -100,8 +102,7 @@ impl<T: Into<Rect>> From<(T, ColorStyle, char)> for Canvas {
 impl<T: Into<Rect>> From<(T, ColorStyle, Rc<String>)> for Canvas {
     fn from((rect, style, string): (T, ColorStyle, Rc<String>)) -> Self {
         let rect = rect.into();
-        let width = rect.w as usize;
-        let height = rect.w as usize;
+        let (width, height) = (rect.w as usize, rect.h as usize);
         let size = width * height;
         let strs = textwrap::Wrapper::new(width)
             .break_words(false)
