@@ -23,12 +23,16 @@ impl Layer for Canvas {
 
     fn get(&self, x: u16, y: u16) -> &Cell {
         debug(self.rect, x, y);
-        self.vec.get((self.rect.w * y + x) as usize).unwrap()
+        self.vec
+            .get((self.rect.w * y + x) as usize)
+            .expect("x and/or y out of bounds")
     }
 
     fn get_mut(&mut self, x: u16, y: u16) -> &mut Cell {
         debug(self.rect, x, y);
-        self.vec.get_mut((self.rect.w * y + x) as usize).unwrap()
+        self.vec
+            .get_mut((self.rect.w * y + x) as usize)
+            .expect("x and/or y out of bounds")
     }
 }
 
@@ -124,7 +128,7 @@ impl<T: Into<Rect>> From<(T, ColorStyle, Rc<String>)> for Canvas {
 impl Display for Canvas {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
         Ok(for cell in self.vec.iter() {
-            cell.fmt(f).unwrap();
+            cell.fmt(f).expect("Cell format error");
         })
     }
 }
