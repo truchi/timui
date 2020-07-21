@@ -24,11 +24,6 @@ impl Cell {
         }
     }
 
-    /// Copies `self` with a space for `char`
-    pub fn space(&self) -> Self {
-        Cell::new(' ', self.style)
-    }
-
     /// Whether `Cell` has a visible foreground
     pub fn has_foreground(&self) -> bool {
         self.char != ' ' && self.style.foreground.is_some()

@@ -82,15 +82,15 @@ impl Layer for Canvas {
 
 /// Creates a `Canvas` with its first `Cell` as `cell` followed by spaced
 /// `cell`.
-impl<T: Into<Rect>> From<(T, Cell)> for Canvas {
-    fn from((rect, cell): (T, Cell)) -> Self {
+impl<T: Into<Rect>> From<(T, ColorStyle, char)> for Canvas {
+    fn from((rect, style, char): (T, ColorStyle, char)) -> Self {
         let rect = rect.into();
         let size = rect.w as usize * rect.h as usize;
 
         let mut cells = Vec::with_capacity(size);
         if size > 0 {
-            cells.push(cell);
-            (1..size).for_each(|_| cells.push(cell.space()));
+            cells.push(Cell::new(char, style));
+            (1..size).for_each(|_| cells.push(style.into()));
         }
 
         Self { rect, cells }
