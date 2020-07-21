@@ -11,22 +11,22 @@ use std::{
 #[derive(Default, Debug)]
 pub struct Canvas {
     /// The `Rect` bounds of the `Layer`
-    rect: Rect,
+    rect:  Rect,
     /// The `Cell`s filling the `Layer`
-    vec:  Vec<Cell>,
+    cells: Vec<Cell>,
 }
 
 impl Canvas {
     /// Creates a `Canvas` filled with `color`ed background `Cell`s
     pub fn with_background(rect: impl Into<Rect>, color: Color) -> Self {
         let rect = rect.into();
-        let mut vec = Vec::with_capacity((rect.w * rect.h) as usize);
+        let mut cells = Vec::with_capacity((rect.w * rect.h) as usize);
 
         for _ in 0..(rect.w * rect.h) {
-            vec.push(Cell::with_background(color));
+            cells.push(Cell::with_background(color));
         }
 
-        Self { rect, vec }
+        Self { rect, cells }
     }
 
     /// Merges `above` above this `Canvas`
@@ -65,14 +65,14 @@ impl Layer for Canvas {
 
     fn get(&self, x: u16, y: u16) -> &Cell {
         debug(self.rect, x, y);
-        self.vec
+        self.cells
             .get((self.rect.w * y + x) as usize)
             .expect("x and/or y out of bounds")
     }
 
     fn get_mut(&mut self, x: u16, y: u16) -> &mut Cell {
         debug(self.rect, x, y);
-        self.vec
+        self.cells
             .get_mut((self.rect.w * y + x) as usize)
             .expect("x and/or y out of bounds")
     }
@@ -85,13 +85,13 @@ impl<T: Into<Rect>> From<(T, Cell)> for Canvas {
         let rect = rect.into();
         let size = rect.w as usize * rect.h as usize;
 
-        let mut vec = Vec::with_capacity(size);
+        let mut cells = Vec::with_capacity(size);
         if size > 0 {
-            vec.push(cell);
-            (1..size).for_each(|_| vec.push(cell.space()));
+            cells.push(cell);
+            (1..size).for_each(|_| cells.push(cell.space()));
         }
 
-        Self { rect, vec }
+        Self { rect, cells }
     }
 }
 
@@ -108,27 +108,25 @@ impl<T: Into<Rect>> From<(T, ColorStyle, Rc<String>)> for Canvas {
             .wrap(&string[..]);
         let lines = strs.len();
 
-        let mut vec = Vec::with_capacity(size);
+        let mut cells = Vec::with_capacity(size);
         for str in strs.iter() {
             let len = str.len();
-            let cells = str
+            str
                 .chars() // TODO Not "real" chars
-                .map(|char| Cell::new(char, style));
-
-            cells.for_each(|cell| vec.push(cell));
-            (len..width).for_each(|_| vec.push(style.into()));
+                .map(|char| Cell::new(char, style)).for_each(|cell| cells.push(cell));
+            (len..width).for_each(|_| cells.push(style.into()));
         }
 
-        (width * lines..size).for_each(|_| vec.push(style.into()));
+        (width * lines..size).for_each(|_| cells.push(style.into()));
 
-        Self { rect, vec }
+        Self { rect, cells }
     }
 }
 
 /// Prints the `Canvas` to the terminal
 impl Display for Canvas {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
-        Ok(for cell in self.vec.iter() {
+        Ok(for cell in self.cells.iter() {
             cell.fmt(f).expect("Cell format error");
         })
     }
@@ -189,12 +187,12 @@ mod tests {
         (
             expected,
             Canvas {
-                rect: (0, 0, 4, 1).into(),
-                vec:  [bottom; 4].into(),
+                rect:  (0, 0, 4, 1).into(),
+                cells: [bottom; 4].into(),
             },
             Canvas {
-                rect: (0, 0, 3, 1).into(),
-                vec:  vec![red_background, green_foreground, default],
+                rect:  (0, 0, 3, 1).into(),
+                cells: vec![red_background, green_foreground, default],
             },
         )
     }
@@ -206,7 +204,7 @@ mod tests {
         assert_eq!(
             {
                 below.above(&above);
-                below.vec
+                below.cells
             },
             expected
         );
@@ -219,7 +217,7 @@ mod tests {
         assert_eq!(
             {
                 above.below(&below);
-                above.vec
+                above.cells
             },
             &expected[..3]
         );
