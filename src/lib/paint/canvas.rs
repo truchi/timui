@@ -63,6 +63,7 @@ impl Layer for Canvas {
         self.rect
     }
 
+    /// PANICS when x and/or y out of `rect`'s
     fn get(&self, x: u16, y: u16) -> &Cell {
         debug(self.rect, x, y);
         self.cells
@@ -70,6 +71,7 @@ impl Layer for Canvas {
             .expect("x and/or y out of bounds")
     }
 
+    /// PANICS when x and/or y out of `rect`'s
     fn get_mut(&mut self, x: u16, y: u16) -> &mut Cell {
         debug(self.rect, x, y);
         self.cells

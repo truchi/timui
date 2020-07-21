@@ -24,10 +24,12 @@ impl Layer for Uniform {
         self.rect
     }
 
+    /// Returns `cell`, ignores arguments
     fn get(&self, _: u16, _: u16) -> &Cell {
         &self.cell
     }
 
+    /// Returns `cell`, ignores arguments
     fn get_mut(&mut self, _: u16, _: u16) -> &mut Cell {
         &mut self.cell
     }
