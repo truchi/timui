@@ -1,5 +1,8 @@
-use super::{Cell, Layer, Rect};
-use crate::style::{Color, ColorStyle};
+use super::{Cell, Layer};
+use crate::{
+    style::{Color, ColorStyle},
+    utils::rect::Rect,
+};
 use std::{
     fmt::{Display, Error, Formatter},
     rc::Rc,

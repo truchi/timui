@@ -1,4 +1,5 @@
-use super::{Cell, Layer, Rect};
+use super::{Cell, Layer};
+use crate::utils::rect::Rect;
 
 /// A uniform `Layer`: same cell all over the layer
 #[derive(Default, Debug)]

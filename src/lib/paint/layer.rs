@@ -1,4 +1,5 @@
-use super::{Cell, Rect};
+use super::Cell;
+use crate::utils::rect::Rect;
 
 /// `Layer` trait providing function to retrieve `Cell`s
 pub trait Layer {
