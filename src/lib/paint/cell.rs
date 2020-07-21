@@ -11,11 +11,6 @@ pub struct Cell {
 }
 
 impl Cell {
-    /// Creates a `Cell`
-    pub fn new(char: char, style: ColorStyle) -> Self {
-        Self { char, style }
-    }
-
     /// Creates a default `Cell` with `background` color
     pub fn with_background(background: Color) -> Self {
         Self {
@@ -68,10 +63,17 @@ impl Default for Cell {
     }
 }
 
+/// Creates a `Cell`
+impl From<(char, ColorStyle)> for Cell {
+    fn from((char, style): (char, ColorStyle)) -> Self {
+        Self { char, style }
+    }
+}
+
 /// A `Cell` with `' '` for `char`
 impl From<ColorStyle> for Cell {
     fn from(style: ColorStyle) -> Self {
-        Cell::new(' ', style)
+        style.into()
     }
 }
 

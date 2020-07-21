@@ -87,7 +87,7 @@ impl<T: Into<Rect>> From<(T, ColorStyle, char)> for Canvas {
 
         let mut cells = Vec::with_capacity(size);
         if size > 0 {
-            cells.push(Cell::new(char, style));
+            cells.push((char, style).into());
             (1..size).for_each(|_| cells.push(style.into()));
         }
 
@@ -114,7 +114,7 @@ impl<T: Into<Rect>> From<(T, ColorStyle, Rc<String>)> for Canvas {
             str
                 .chars() // TODO Not "real" chars
                 .take(width)
-                .map(|char| Cell::new(char, style))
+                .map(|char| (char, style).into())
                 .for_each(|cell| cells.push(cell));
 
             (len..width).for_each(|_| cells.push(style.into()));
