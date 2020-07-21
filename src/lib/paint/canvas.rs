@@ -115,7 +115,10 @@ impl<T: Into<Rect>> From<(T, ColorStyle, Rc<String>)> for Canvas {
             let len = str.len();
             str
                 .chars() // TODO Not "real" chars
-                .map(|char| Cell::new(char, style)).for_each(|cell| cells.push(cell));
+                .take(width)
+                .map(|char| Cell::new(char, style))
+                .for_each(|cell| cells.push(cell));
+
             (len..width).for_each(|_| cells.push(style.into()));
         }
 
