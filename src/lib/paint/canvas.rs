@@ -1,5 +1,3 @@
-//! # `Canvas`
-
 use super::{Cell, Layer, Rect};
 use crate::style::{Color, ColorStyle};
 use std::{
@@ -7,7 +5,7 @@ use std::{
     rc::Rc,
 };
 
-/// A positioned rectangle of `Cell`s
+/// A `Rect` of `Cell`s
 #[derive(Default, Debug)]
 pub struct Canvas {
     /// The `Rect` bounds of the `Layer`
@@ -63,7 +61,7 @@ impl Layer for Canvas {
         self.rect
     }
 
-    /// PANICS when x and/or y out of `rect`'s
+    /// PANICS when `x` and/or `y` out of `rect`'s
     fn get(&self, x: u16, y: u16) -> &Cell {
         debug(self.rect, x, y);
         self.cells
@@ -71,7 +69,7 @@ impl Layer for Canvas {
             .expect("x and/or y out of bounds")
     }
 
-    /// PANICS when x and/or y out of `rect`'s
+    /// PANICS when `x` and/or `y` out of `rect`'s
     fn get_mut(&mut self, x: u16, y: u16) -> &mut Cell {
         debug(self.rect, x, y);
         self.cells
@@ -81,7 +79,7 @@ impl Layer for Canvas {
 }
 
 /// Creates a `Canvas` with its first `Cell` as `cell` followed by spaced
-/// `cell`.
+/// `cell.style`.
 impl<T: Into<Rect>> From<(T, ColorStyle, char)> for Canvas {
     fn from((rect, style, char): (T, ColorStyle, char)) -> Self {
         let rect = rect.into();
@@ -137,6 +135,7 @@ impl Display for Canvas {
     }
 }
 
+/// PANICS(debug) when `x` and/or `y` is out of `rect`'s bounds
 fn debug(rect: Rect, x: u16, y: u16) {
     debug_assert!(x >= rect.x, "`x` ({}) must be >= `rect.x` ({})", x, rect.x);
     debug_assert!(

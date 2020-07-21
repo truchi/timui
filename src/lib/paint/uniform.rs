@@ -1,6 +1,6 @@
 use super::{Cell, Layer, Rect};
 
-/// A uniform `Layer`: same same all over the layer
+/// A uniform `Layer`: same cell all over the layer
 #[derive(Default, Debug)]
 pub struct Uniform {
     /// The `Rect` bounds of the `Layer`

@@ -58,7 +58,7 @@ impl Cell {
     }
 }
 
-/// A `Cell` with ' ' for `char` and `Default` `ColorStyle`
+/// A `Cell` with `' '` for `char` and `Default` `ColorStyle`
 impl Default for Cell {
     fn default() -> Self {
         Self {
@@ -68,7 +68,7 @@ impl Default for Cell {
     }
 }
 
-/// A `Cell` with ' ' for `char`
+/// A `Cell` with `' '` for `char`
 impl From<ColorStyle> for Cell {
     fn from(style: ColorStyle) -> Self {
         Cell::new(' ', style)

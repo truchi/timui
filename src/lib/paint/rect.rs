@@ -1,5 +1,6 @@
 use stretch::result::Layout;
 
+/// A width/height `Rect`angle at x/y
 #[derive(Copy, Clone, PartialEq, Default, Debug)]
 pub struct Rect {
     pub x: u16,
@@ -9,6 +10,7 @@ pub struct Rect {
 }
 
 impl Rect {
+    /// Returns a `Rect` being `self` clipped by `clip`
     pub fn clip(&self, clip: &Self) -> Self {
         let x = clamp(clip.x, self.x, self.x + self.w);
         let y = clamp(clip.y, self.y, self.y + self.h);
@@ -19,12 +21,14 @@ impl Rect {
     }
 }
 
+/// (x, y, w, h)
 impl From<(u16, u16, u16, u16)> for Rect {
     fn from((x, y, w, h): (u16, u16, u16, u16)) -> Self {
         Self { x, y, w, h }
     }
 }
 
+/// `stretch`'s `Layout` is convertible to a `Rect`
 impl From<Layout> for Rect {
     fn from(layout: Layout) -> Self {
         Self {
@@ -36,6 +40,7 @@ impl From<Layout> for Rect {
     }
 }
 
+/// Clamps `x` between `min` and `max`
 fn clamp(x: u16, min: u16, max: u16) -> u16 {
     x.max(min).min(max)
 }
