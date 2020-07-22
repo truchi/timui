@@ -2,51 +2,58 @@ use super::UIElement;
 use crate::{component::ElementObject, paint::Canvas, utils::tree::Node};
 use std::{
     cell::Ref,
-    fmt::{Debug, Formatter, Result},
+    fmt::{Debug, Display, Error, Formatter, Result},
 };
 use stretch::node::Stretch;
 
+/// Type of the `UI` tree nodes
 type UINode = Node<UIElement>;
+
+/// `Context` for the rendering tree traversal
 struct Context<'ui> {
+    /// The `Stretch` tree
     stretch: &'ui mut Stretch,
+    /// The `Canvas`
     canvas:  Canvas,
 }
 
+/// `UI` tree
 pub struct UI {
+    /// Root node
     root:    UINode,
+    /// `stretch` node
     stretch: Stretch,
 }
 
 impl UI {
+    /// Creates a new `UI` from a root `ElementObject`
     pub fn new(element: ElementObject) -> Self {
         (element, Stretch::new()).into()
     }
 
-    pub fn render(&mut self, width: u16, height: u16) {
-        self.compute_layout(width, height);
-
-        let ctx = Context {
-            stretch: &mut self.stretch,
-            canvas:  Canvas::with_background((0, 0, width, height), None),
-        };
-
-        let ctx = self
-            .root
-            .recurs(ctx, Self::render_before, Self::render_after);
-
-        println!("{}{}", termion::clear::All, ctx.canvas);
-    }
-
-    fn compute_layout(&mut self, width: u16, height: u16) {
+    /// Paint the `UI` tree
+    pub fn paint(&mut self, width: u16, height: u16) -> Canvas {
         self.stretch
             .compute_layout(self.root.get_value().id, stretch::geometry::Size {
                 width:  stretch::number::Number::Defined(width as f32),
                 height: stretch::number::Number::Defined(height as f32),
             })
             .unwrap();
+
+        self.root
+            .recurs(
+                Context {
+                    stretch: &mut self.stretch,
+                    canvas:  Canvas::with_background((0, 0, width, height), None),
+                },
+                Self::before,
+                Self::after,
+            )
+            .canvas
     }
 
-    fn render_before<'ui>(node: &UINode, ctx: Context<'ui>) -> Context<'ui> {
+    /// Inherits layout and style of `node` and compute its paintings
+    fn before<'ui>(node: &UINode, ctx: Context<'ui>) -> Context<'ui> {
         let parent_layout = node
             .get_parent()
             .map(|parent| parent.get_value().layout.unwrap());
@@ -62,7 +69,8 @@ impl UI {
         ctx
     }
 
-    fn render_after<'ui>(node: &UINode, mut ctx: Context<'ui>) -> Context<'ui> {
+    /// Paints `node` below `ctx.canvas`
+    fn after<'ui>(node: &UINode, mut ctx: Context<'ui>) -> Context<'ui> {
         // println!("AFTER");
         Ref::map(node.get_value(), |element| {
             if let Some(paint) = &element.paint {
@@ -75,6 +83,7 @@ impl UI {
     }
 }
 
+/// Creates a `UI` from an `ElementObject` and its `stretch` tree
 impl From<(ElementObject, Stretch)> for UI {
     fn from((element, mut stretch): (ElementObject, Stretch)) -> Self {
         let children = element.children();

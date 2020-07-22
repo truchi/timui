@@ -1,4 +1,6 @@
 //! # `UI` module
+//!
+//! TODO document
 
 mod ui;
 mod ui_element;
