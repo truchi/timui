@@ -1,5 +1,5 @@
 use super::UIElement;
-use crate::{component::ElementObject, paint::Canvas, style::ColorStyle, utils::tree::Node};
+use crate::{component::ElementObject, paint::Canvas, utils::tree::Node};
 use std::cell::Ref;
 use stretch::node::Stretch;
 
@@ -16,10 +16,13 @@ impl UINode {
         let parent_layout = self
             .get_parent()
             .map(|parent| parent.get_value().layout.unwrap());
+        let parent_style = self.get_parent().map(|parent| parent.get_value().style);
+
         let mut element = self.get_value_mut();
 
         // println!("BEFORE");
         element.layout(ctx.stretch, parent_layout);
+        element.style(parent_style);
         element.paint();
         // println!("{:#?}", element.layout);
 
@@ -39,29 +42,24 @@ impl UINode {
     }
 }
 
-impl From<(Stretch, ColorStyle, ElementObject)> for StretchUINode {
-    fn from((mut stretch, inherited, element): (Stretch, ColorStyle, ElementObject)) -> Self {
+impl From<(Stretch, ElementObject)> for StretchUINode {
+    fn from((mut stretch, element): (Stretch, ElementObject)) -> Self {
+        let children = element.children();
         let style = element.style();
-        let elements = element.children();
-        let layout_style = style.layout;
-        let color_style = style.color.inherit(inherited);
-        let id = stretch.new_node(layout_style, Default::default()).unwrap();
-        let layout = None;
-        let paint = None;
+        let id = stretch.new_node(style.layout, vec![]).unwrap();
         let node = UINode::new(UIElement {
             id,
             element,
-            layout,
-            layout_style,
-            color_style,
-            paint,
+            style,
+            layout: None,
+            paint: None,
         });
 
-        let len = elements.len();
-        let (mut stretch, children, children_ids) = elements.into_iter().fold(
+        let len = children.len();
+        let (mut stretch, children, children_ids) = children.into_iter().fold(
             (stretch, Vec::with_capacity(len), Vec::with_capacity(len)),
             |(stretch, mut children, mut children_ids), element| {
-                let Self(stretch, child) = (stretch, color_style, element).into();
+                let Self(stretch, child) = (stretch, element).into();
 
                 child.set_parent(&node);
                 children_ids.push(child.get_value().id);

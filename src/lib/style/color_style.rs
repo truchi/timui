@@ -21,10 +21,21 @@ pub struct ColorStyle {
 
 impl ColorStyle {
     /// Creates a default `ColorStyle` with `background` color
-    pub fn with_background(background: Color) -> Self {
+    pub fn with_background(background: Option<Color>) -> Self {
         Self {
-            background: Some(background),
+            background,
             ..Default::default()
+        }
+    }
+
+    ///
+    pub fn inherit(&self, parent: &Self) -> Self {
+        Self {
+            foreground: self.foreground.or(parent.foreground),
+            background: self.background.or(parent.background),
+            bold:       self.bold.or(parent.bold),
+            italic:     self.italic.or(parent.italic),
+            underline:  self.underline.or(parent.underline),
         }
     }
 

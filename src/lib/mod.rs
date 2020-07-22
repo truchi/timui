@@ -11,6 +11,6 @@ pub mod component;
 pub mod paint;
 // pub mod render;
 pub mod style;
-// pub mod ui;
+pub mod ui;
 #[allow(dead_code)]
 mod utils;

@@ -19,7 +19,7 @@ pub struct Canvas {
 
 impl Canvas {
     /// Creates a `Canvas` filled with `color`ed background `Cell`s
-    pub fn with_background(rect: impl Into<Rect>, color: Color) -> Self {
+    pub fn with_background(rect: impl Into<Rect>, color: Option<Color>) -> Self {
         let rect = rect.into();
         let mut cells = Vec::with_capacity((rect.w * rect.h) as usize);
 

@@ -12,7 +12,7 @@ pub struct Cell {
 
 impl Cell {
     /// Creates a default `Cell` with `background` color
-    pub fn with_background(background: Color) -> Self {
+    pub fn with_background(background: Option<Color>) -> Self {
         Self {
             char:  ' ',
             style: ColorStyle::with_background(background),
