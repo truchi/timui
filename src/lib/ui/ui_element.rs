@@ -14,6 +14,16 @@ pub struct UIElement {
 }
 
 impl UIElement {
+    pub fn new(id: Id, element: ElementObject, style: Style) -> Self {
+        Self {
+            id,
+            element,
+            style,
+            layout: None,
+            paint: None,
+        }
+    }
+
     pub fn layout(&mut self, stretch: &Stretch, parent_layout: Option<Layout>) {
         let mut layout = *stretch.layout(self.id).unwrap();
 
